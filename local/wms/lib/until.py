@@ -297,8 +297,8 @@ class Api(object):
                     "type": "filesync",
                     "filepath": filepath,
                 }
-                print(res)
                 res = self.post(move_post_body)
+                print(res)
                 if res['success']:
                     df[df['CAS索引号'] == code]['上传《化学品安全技术说明书》'] = res['module']['key']
                 else:
