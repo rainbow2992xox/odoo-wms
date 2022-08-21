@@ -18,6 +18,7 @@
                 <field name="create_date" string="调用时间"></field>
                 <field name="api_address"/>
                 <field name="status"/>
+<!--                <field name="body"/>-->
                 <field name="res"/>
                 <field name="last_idx"/>
             </tree>
