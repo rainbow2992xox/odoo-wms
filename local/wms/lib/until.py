@@ -258,7 +258,7 @@ class Api(object):
                     }
 
         elif key == "merchandise":
-            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx")
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx",dtype={"危险货物类别":str})
             new_cols = []
             del_cols = []
             map_dict = self.map[key]
@@ -286,7 +286,7 @@ class Api(object):
                     }
 
         elif key == "merchandise_files":
-            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx")
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx",dtype={"危险货物类别":str})
             code_list = list(set(df['CAS索引号']))
             for code in code_list:
                 # '/home/reagent/opt/sdspdf'
