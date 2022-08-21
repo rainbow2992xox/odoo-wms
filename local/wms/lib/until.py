@@ -286,8 +286,7 @@ class Api(object):
                     }
 
         elif key == "merchandise_files":
-            file_df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx")
-            df = file_df
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx")
             code_list = list(set(df['CAS索引号']))
             for code in code_list:
                 # '/home/reagent/opt/sdspdf'
@@ -301,13 +300,10 @@ class Api(object):
                 print(res)
                 if res['success']:
                     print('============success===========')
-                    print(code)
-                    print(df[df['CAS索引号'] == code])
-                    print(res['module']['key'])
-                    df[df['CAS索引号'] == code].loc[:,'上传《化学品安全技术说明书》'] = res['module']['key']
+                    df.loc[df[df['CAS索引号'] == code].index.tolist(),'上传《化学品安全技术说明书》'] = res['module']['key']
                     print(df[df['CAS索引号'] == code]['上传《化学品安全技术说明书》'])
                 else:
-                    df[df['CAS索引号'] == code].loc[:,'上传《化学品安全技术说明书》'] = '上传失败'
+                    df.loc[df[df['CAS索引号'] == code].index.tolist(),'上传《化学品安全技术说明书》'] = '上传失败'
             print(df['上传《化学品安全技术说明书》'])
             df.to_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", index=False)
 
