@@ -6,6 +6,7 @@
 # emacs backup files
 *~
 # not tracked subdirectories
+/bin/
 /env/
 /src/
 /filestore/
