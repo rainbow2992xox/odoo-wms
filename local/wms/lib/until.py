@@ -259,6 +259,7 @@ class Api(object):
 
         elif key == "merchandise":
             df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx",dtype={"危险货物类别":str})
+            df.loc[:, '上传《化学品危险性分类报告》'] = df.loc[:, '上传《化学品安全技术说明书》']
             new_cols = []
             del_cols = []
             map_dict = self.map[key]
