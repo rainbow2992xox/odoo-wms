@@ -111,14 +111,14 @@ class Api(object):
                 "数量": "amount"
             },
             "warehouse_area": {
-                "仓库号":"warehouseCode",
-                "仓间号":"warehouseAreaCode",
-                "仓位号":"locationCodeList",
-                "仓库火灾危险性类别":"fireRisk",
-                "仓间面积（㎡）":"acreage",
-                "仓间最大存储量（吨）":"maxVolume",
-                "消防措施":"fireFightingMeasures",
-                "仓间储存危险化学品危险性类别":"riskGhsCategory"
+                "仓库号": "warehouseCode",
+                "仓间号": "warehouseAreaCode",
+                "仓位号": "locationCodeList",
+                "仓库火灾危险性类别": "fireRisk",
+                "仓间面积（㎡）": "acreage",
+                "仓间最大存储量（吨）": "maxVolume",
+                "消防措施": "fireFightingMeasures",
+                "仓间储存危险化学品危险性类别": "riskGhsCategory"
             },
             "merchandise": {"货品ID": "merchandiseId",
                             "货品名称": "merchandiseName",
@@ -303,12 +303,12 @@ class Api(object):
             }
 
             res = self.post(move_post_body)
-            return {"api_address": move_post_body["router"],
-                    "body": move_post_body["data"],
-                    "status": '0' if res["success"] else '1',
-                    "res": res,
-                    "last_idx": 0
-                    }
+            logs.append({"api_address": move_post_body["router"],
+                         "body": move_post_body["data"],
+                         "status": '0' if res["success"] else '1',
+                         "res": res,
+                         "last_idx": 0
+                         })
 
         elif key == "merchandise":
             df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", dtype={"危险货物类别": str})
