@@ -286,8 +286,8 @@ class Api(object):
                     }
 
         elif key == "merchandise_files":
-            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx")
-
+            file_df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx")
+            df = file_df
             code_list = list(set(df['CAS索引号']))
             for code in code_list:
                 # '/home/reagent/opt/sdspdf'
