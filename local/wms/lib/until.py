@@ -332,12 +332,12 @@ class Api(object):
             }
 
             res = self.post(move_post_body)
-            return {"api_address": move_post_body["router"],
+            logs.append({"api_address": move_post_body["router"],
                     "body": move_post_body["data"],
                     "status": '0' if res["success"] else '1',
                     "res": res,
                     "last_idx": 0
-                    }
+                    })
 
         elif key == "merchandise_files":
             df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx", dtype={"危险货物类别": str})
