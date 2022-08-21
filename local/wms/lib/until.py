@@ -258,7 +258,7 @@ class Api(object):
                     }
 
         elif key == "merchandise":
-            df = pd.read_excel("./local/wms/data/merchandise.xlsx")
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx")
             new_cols = []
             del_cols = []
             map_dict = self.map[key]
@@ -286,28 +286,25 @@ class Api(object):
                     }
 
         elif key == "merchandise_files":
-            df = pd.read_excel("./local/wms/data/merchandise.xlsx")
-            upload_dict = {}
-            for idx, row in df.iterrows():
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx")
+
+            code_list = list(set(df['CAS索引号']))
+            for code in code_list:
                 # '/home/reagent/opt/sdspdf'
-                filepath = os.path.join('/home/reagent/opt/sdspdf', row['CAS索引号'] + '.pdf')
+                filepath = os.path.join('/home/reagent/opt/sdspdf', code + '.pdf')
                 print(filepath)
                 move_post_body = {
                     "type": "filesync",
                     "filepath": filepath,
                 }
                 print(res)
-                if filepath not in upload_dict:
-                    res = self.post(move_post_body)
-                    if res['success']:
-                        upload_dict[filepath] = res['module']['key']
-                        row['上传《化学品安全技术说明书》'] = upload_dict[filepath]
-                    else:
-                        row['上传《化学品安全技术说明书》'] = '上传失败'
+                res = self.post(move_post_body)
+                if res['success']:
+                    df[df['CAS索引号'] == code]['上传《化学品安全技术说明书》'] = res['module']['key']
                 else:
-                    row['上传《化学品安全技术说明书》'] = upload_dict[filepath]
+                    df[df['CAS索引号'] == code]['上传《化学品安全技术说明书》'] = '上传失败'
 
-            df.to_excel("./local/wms/data/merchandise_file.xlsx", index=False)
+            df.to_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", index=False)
 
         self.cursor.close()
         self.con.close()
