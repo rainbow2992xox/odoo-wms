@@ -119,7 +119,7 @@ class Api(object):
                             "危险化学品名": "chemicalName",
                             "成分": "mixChemicleName",
                             "物理状态": "physicalState",
-                            "其他属性": "otherAttribute",
+                            "其它属性": "otherAttribute",
                             "联合国编号（UN号）": "unCode",
                             "CAS号": "casCode",
                             "危险性类别（GHS）": "riskGhsItemCategory",
@@ -259,7 +259,6 @@ class Api(object):
 
         elif key == "merchandise":
             df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx")
-            df.loc[:,'上传《化学品危险性分类报告》'] = df.loc[:,'上传《化学品安全技术说明书》']
             new_cols = []
             del_cols = []
             map_dict = self.map[key]
