@@ -303,7 +303,7 @@ class Api(object):
                     df[df['CAS索引号'] == code]['上传《化学品安全技术说明书》'] = res['module']['key']
                 else:
                     df[df['CAS索引号'] == code]['上传《化学品安全技术说明书》'] = '上传失败'
-
+            print(df)
             df.to_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", index=False)
 
         self.cursor.close()
