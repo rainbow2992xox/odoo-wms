@@ -300,10 +300,11 @@ class Api(object):
                 res = self.post(move_post_body)
                 print(res)
                 if res['success']:
+                    print('============success===========')
                     df[df['CAS索引号'] == code].loc[:,'上传《化学品安全技术说明书》'] = res['module']['key']
                 else:
                     df[df['CAS索引号'] == code].loc[:,'上传《化学品安全技术说明书》'] = '上传失败'
-            print(df)
+            print(df['上传《化学品安全技术说明书》'])
             df.to_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", index=False)
 
         self.cursor.close()
