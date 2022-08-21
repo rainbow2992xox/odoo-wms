@@ -301,6 +301,7 @@ class Api(object):
                 print(res)
                 if res['success']:
                     print('============success===========')
+                    print(code)
                     print(df[df['CAS索引号'] == code])
                     print(res['module']['key'])
                     df[df['CAS索引号'] == code].loc[:,'上传《化学品安全技术说明书》'] = res['module']['key']
