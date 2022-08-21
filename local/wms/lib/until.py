@@ -287,6 +287,7 @@ class Api(object):
 
         elif key == "merchandise_files":
             df = pd.read_excel("./local/wms/data/merchandise.xlsx")
+            upload_dict = {}
             for idx, row in df.iterrows():
                 # '/home/reagent/opt/sdspdf'
                 filepath = os.path.join('/home/reagent/opt/sdspdf', row['CAS索引号'] + '.pdf')
@@ -295,9 +296,17 @@ class Api(object):
                     "type": "filesync",
                     "filepath": filepath,
                 }
-                res = self.post(move_post_body)
                 print(res)
-                row['上传《化学品安全技术说明书》'] = res['module']['key']
+                if filepath not in upload_dict:
+                    res = self.post(move_post_body)
+                    if res['success']:
+                        upload_dict[filepath] = res['module']['key']
+                        row['上传《化学品安全技术说明书》'] = upload_dict[filepath]
+                    else:
+                        row['上传《化学品安全技术说明书》'] = '上传失败'
+                else:
+                    row['上传《化学品安全技术说明书》'] = upload_dict[filepath]
+
             df.to_excel("./local/wms/data/merchandise_file.xlsx", index=False)
 
         self.cursor.close()
