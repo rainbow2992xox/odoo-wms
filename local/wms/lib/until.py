@@ -261,7 +261,6 @@ class Api(object):
 
                     res = self.post(move_post_body)
                     logs.append({"api_address": move_post_body["router"],
-                                 "body": move_post_body["data"],
                                  "status": '0' if res["success"] else '1',
                                  "res": res,
                                  "last_idx": 0
@@ -279,7 +278,6 @@ class Api(object):
             }
             res = self.post(move_post_body)
             logs.append({"api_address": move_post_body["router"],
-                         "body": move_post_body["data"],
                          "status": '0' if res["success"] else '1',
                          "res": res,
                          "last_idx": 0
@@ -304,7 +302,6 @@ class Api(object):
 
             res = self.post(move_post_body)
             logs.append({"api_address": move_post_body["router"],
-                         "body": move_post_body["data"],
                          "status": '0' if res["success"] else '1',
                          "res": res,
                          "last_idx": 0
@@ -333,7 +330,6 @@ class Api(object):
 
             res = self.post(move_post_body)
             logs.append({"api_address": move_post_body["router"],
-                    "body": move_post_body["data"],
                     "status": '0' if res["success"] else '1',
                     "res": res,
                     "last_idx": 0

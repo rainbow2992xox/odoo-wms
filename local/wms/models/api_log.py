@@ -10,7 +10,7 @@ class ApiLog(models.Model):
     api_address = fields.Char('API地址')
     last_idx = fields.Integer(string="最后一条记录ID")
     status = fields.Selection([('0', '成功'), ('1', '失败')], string='状态')
-    body = fields.Text(string='请求结果')
+    # body = fields.Text(string='请求结果')
     res = fields.Text(string='返回结果')
 
 
