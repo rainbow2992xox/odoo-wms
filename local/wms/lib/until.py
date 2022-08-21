@@ -302,6 +302,7 @@ class Api(object):
                 if res['success']:
                     print('============success===========')
                     df[df['CAS索引号'] == code].loc[:,'上传《化学品安全技术说明书》'] = res['module']['key']
+                    print(df[df['CAS索引号'] == code]['上传《化学品安全技术说明书》'])
                 else:
                     df[df['CAS索引号'] == code].loc[:,'上传《化学品安全技术说明书》'] = '上传失败'
             print(df['上传《化学品安全技术说明书》'])
