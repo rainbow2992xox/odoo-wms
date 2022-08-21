@@ -16,6 +16,7 @@ class ApiLog(models.Model):
 
     def call(self,key):
         res = api.call_java_api(key)
-        record = self.env['wms.api.log'].create(res)
+        for item in res:
+            record = self.env['wms.api.log'].create(item)
 
 

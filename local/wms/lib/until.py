@@ -110,6 +110,16 @@ class Api(object):
                 "生产批次号": "batchCode",
                 "数量": "amount"
             },
+            "warehouse_area": {
+                "仓库号":"warehouseCode",
+                "仓间号":"warehouseAreaCode",
+                "仓位号":"locationCodeList",
+                "仓库火灾危险性类别":"fireRisk",
+                "仓间面积（㎡）":"acreage",
+                "仓间最大存储量（吨）":"maxVolume",
+                "消防措施":"fireFightingMeasures",
+                "仓间储存危险化学品危险性类别":"riskGhsCategory"
+            },
             "merchandise": {"货品ID": "merchandiseId",
                             "货品名称": "merchandiseName",
                             "货主ID": "ownerId",
@@ -205,7 +215,13 @@ class Api(object):
         if len(list_result) > 0:
             return list_result[0]
         else:
-            return ""
+            return {
+                "warehouseCode": warehouseCode,
+                "warehouseAreaCode": warehouseAreaCode,
+                "locationCode": locationCode,
+                "merchandiseId": merchandiseId,
+                "amount": 0
+            }
 
     def post(self, body):
         res = requests.request("POST", "http://10.3.0.150:7673/java/sync", headers={"content-type": "application/json",
@@ -215,6 +231,7 @@ class Api(object):
 
     def call_java_api(self, key):
         self.connect()
+        logs = []
         if key == "move_stock":
             self.cursor.execute(self.sql[key])
             result = self.cursor.fetchall()
@@ -222,7 +239,11 @@ class Api(object):
             for item in list_result:
                 now = datetime.datetime.now()
                 if (now - item['transferTime']).seconds < 60 * 200:
-                    move_post_body = {}
+                    move_post_body = {
+                        "type": "incresync",
+                        "data": {},
+                        "router": "/report/trans"
+                    }
                     item['warehouseType'] = 1
                     move_post_body['transferData'] = item
 
@@ -238,7 +259,14 @@ class Api(object):
 
                     print(move_post_body, end='\n')
 
-                    # 请求JAVA接口
+                    res = self.post(move_post_body)
+                    logs.append({"api_address": move_post_body["router"],
+                                 "body": move_post_body["data"],
+                                 "status": '0' if res["success"] else '1',
+                                 "res": res,
+                                 "last_idx": 0
+                                 })
+
 
         elif key == "stock":
             self.cursor.execute(self.sql[key])
@@ -250,6 +278,31 @@ class Api(object):
                 "router": "/sync/data/inventorySync"
             }
             res = self.post(move_post_body)
+            logs.append({"api_address": move_post_body["router"],
+                         "body": move_post_body["data"],
+                         "status": '0' if res["success"] else '1',
+                         "res": res,
+                         "last_idx": 0
+                         })
+
+        elif key == "warehouse_area":
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/warehouse_area.xlsx")
+            new_cols = []
+            map_dict = self.map[key]
+            for k in df.columns:
+                if k in map_dict:
+                    new_cols.append(map_dict[k])
+                else:
+                    new_cols.append(k)
+            df.columns = new_cols
+            df = df.fillna('')
+            move_post_body = {
+                "type": "fullsync",
+                "data": {"warehouseData": df.to_dict(orient='records')},
+                "router": "/sync/data/warehouseSync"
+            }
+
+            res = self.post(move_post_body)
             return {"api_address": move_post_body["router"],
                     "body": move_post_body["data"],
                     "status": '0' if res["success"] else '1',
@@ -258,7 +311,7 @@ class Api(object):
                     }
 
         elif key == "merchandise":
-            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx",dtype={"危险货物类别":str})
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", dtype={"危险货物类别": str})
             df.loc[:, '上传《化学品危险性分类报告》'] = df.loc[:, '上传《化学品安全技术说明书》']
             new_cols = []
             del_cols = []
@@ -287,7 +340,7 @@ class Api(object):
                     }
 
         elif key == "merchandise_files":
-            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx",dtype={"危险货物类别":str})
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx", dtype={"危险货物类别": str})
             code_list = list(set(df['CAS索引号']))
             for code in code_list:
                 # '/home/reagent/opt/sdspdf'
@@ -301,12 +354,13 @@ class Api(object):
                 print(res)
                 if res['success']:
                     print('============success===========')
-                    df.loc[df[df['CAS索引号'] == code].index.tolist(),'上传《化学品安全技术说明书》'] = res['module']['key']
+                    df.loc[df[df['CAS索引号'] == code].index.tolist(), '上传《化学品安全技术说明书》'] = res['module']['key']
                     print(df[df['CAS索引号'] == code]['上传《化学品安全技术说明书》'])
                 else:
-                    df.loc[df[df['CAS索引号'] == code].index.tolist(),'上传《化学品安全技术说明书》'] = '上传失败'
+                    df.loc[df[df['CAS索引号'] == code].index.tolist(), '上传《化学品安全技术说明书》'] = '上传失败'
             print(df['上传《化学品安全技术说明书》'])
             df.to_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", index=False)
 
+        return logs
         self.cursor.close()
         self.con.close()
