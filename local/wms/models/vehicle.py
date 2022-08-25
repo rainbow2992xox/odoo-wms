@@ -13,6 +13,8 @@ class Vehicle(models.Model):
     enter_exit_type = fields.Selection([('0', '进入'), ('1', '出去')], string='出入类型', required=True)
     carrier_plate_type = fields.Selection([('0', '非危险化学品车'), ('1', '危险化学品车')], string='车辆性质', required=True)
 
+    carrier_name = fields.Char(string="承运企业名称", required=True, size=32)
+
     carrier_driver_name = fields.Char(string="驾驶员姓名", size=32, required=True)
     carrier_driver_idcard = fields.Char(string="驾驶员身份证号", size=32, required=True)
 
@@ -52,14 +54,10 @@ class Vehicle(models.Model):
             return False
 
     def plate_number_check(self, plate_number):
-        pattern_str = "([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼]" \
-                      "{1}(([A-HJ-Z]{1}[A-HJ-NP-Z0-9]{5})|([A-HJ-Z]{1}(([DF]{1}[A-HJ-NP-Z0-9]{1}[0-9]{4})|([0-9]{5}[DF]" \
-                      "{1})))|([A-HJ-Z]{1}[A-D0-9]{1}[0-9]{3}警)))|([0-9]{6}使)|((([沪粤川云桂鄂陕蒙藏黑辽渝]{1}A)|鲁B|闽D|蒙E|蒙H)" \
-                      "[0-9]{4}领)|(WJ[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼·•]{1}[0-9]{4}[TDSHBXJ0-9]{1})" \
-                      "|([VKHBSLJNGCE]{1}[A-DJ-PR-TVY]{1}[0-9]{5})"
+        pattern_str = '([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1}(([A-HJ-NP-Z0-9]{5}[DF]{1})|([DF]{1}[A-HJ-NP-Z0-9]{5})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1})'
 
         # 校验车牌
-        if re.findall(pattern_str, plate_number):
+        if re.findall(pattern_str, plate_number) and len(plate_number) <= 8 and len(plate_number) >= 7:
             return True
         else:
             return False

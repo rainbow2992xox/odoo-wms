@@ -10,6 +10,24 @@
     <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
     <menuitem name="车辆出入记录" id="wms_vehicle_menu" parent="wms_base_menu" action="wms_vehicle_action"/>
 
+    <record id="vehicle_search" model="ir.ui.view">
+        <field name="name">搜索视图</field>
+        <field name="model">wms.vehicle</field>
+        <field name="arch" type="xml">
+            <search string="车牌号搜索">
+                <field name="carrier_plate_number" string="车牌号"
+                       filter_domain="[('carrier_plate_number','ilike',self)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!--    <record id="wms.open_view_vehicle_list_my" model="ir.actions.act_window">-->
+    <!--        <field name="name">车牌搜索记录</field>-->
+    <!--        <field name="res_model">wms.vehicle</field>-->
+    <!--        <field name="search_view_id" ref="vehicle_search"/>-->
+    <!--        <field name="view_mode">tree</field>-->
+    <!--    </record>-->
+
     <record id="wms_vehicle_view_form_simplified" model="ir.ui.view">
         <field name="name">wms.vehicle.view.form.simplified</field>
         <field name="model">wms.vehicle</field>
@@ -17,10 +35,13 @@
             <form>
                 <sheet>
                     <group col='4' string="车辆信息">
-                         <field name="enter_exit_time" required="1"/>
-                         <field name="carrier_plate_number" required="1"/>
-                         <field name="enter_exit_type" required="1"/>
-                         <field name="carrier_plate_type" required="1"/>
+                        <field name="enter_exit_time" required="1"/>
+                        <field name="carrier_plate_number" required="1"/>
+                        <field name="enter_exit_type" required="1"/>
+                        <field name="carrier_plate_type" required="1"/>
+                    </group>
+                    <group string="企业信息">
+                        <field name="carrier_name" required="1"/>
                     </group>
                     <group col='4' string="驾驶员信息">
                         <field name="carrier_driver_name" required="1"/>
@@ -43,6 +64,7 @@
             <tree>
                 <field name="enter_exit_time" required="1"/>
                 <field name="carrier_plate_number" required="1"/>
+                <field name="carrier_name" required="1"/>
                 <field name="enter_exit_type" required="1"/>
                 <field name="carrier_plate_type" required="1"/>
                 <field name="carrier_driver_name" required="1"/>
