@@ -13,7 +13,7 @@ class Api(object):
 
     def __init__(self):
 
-        self.sql = {
+        self._sql = {
             "stock": '''SELECT si.FACILITY_ALIAS_ID 仓库号
               ,si.LOCN_AREA 仓间号
               ,si.LOCN_BRCD 仓位号
@@ -32,35 +32,49 @@ class Api(object):
                       ,si.LOCN_BRCD
                       ,si.ITEM_NAME''',
             "in_stock": '''SELECT sr.RECV_DATE_TIME 入库时间
-              ,sr.FACILITY_ALIAS_ID 入库仓库号
-              ,sr.LOCN_AREA  入库仓间号
-              ,sr.LOCN_BRCD  入库仓位号
-              ,sr.ITEM_ID 货品ID
-              ,sr.ITEM_NAME  商品编码
-              ,sr.BATCH_NBR  生产批次号
-              ,sr.ON_HAND_QTY  数量
-              ,sr.DIRECTION 业务描述
-              FROM SEND_RECV_LIST_TO_GOV sr
-              WHERE sr.COMPANY_CODE ='SCRC' AND sr.FACILITY_ALIAS_ID ='HS01'AND sr.DIRECTION IN ('入库上架')
-              AND sr.LOCN_AREA in(4,5，6，8，11，12，13，17，18，19，20，21，22，23，24，25，26，27，28，29，30，31，32，33)
-              AND TO_CHAR(sr.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
-              ORDER BY sr.RECV_DATE_TIME''',
+                      ,sr.FACILITY_ALIAS_ID 入库仓库号
+                      ,sr.LOCN_AREA  入库仓间号
+                      ,sr.LOCN_BRCD  入库仓位号
+                      ,sr.ITEM_ID 货品ID
+                      ,sr.ITEM_NAME  商品编码
+                      ,sr.BATCH_NBR  生产批次号
+                      ,sr.ON_HAND_QTY  数量
+                      ,sr.DIRECTION 业务描述
+                      ,sr.car_nbr   送货车号
+                      FROM SEND_RECV_LIST_TO_GOV sr
+                      WHERE sr.COMPANY_CODE ='SCRC' AND sr.FACILITY_ALIAS_ID ='HS01'AND sr.DIRECTION IN ('入库上架')
+                      AND sr.LOCN_AREA in(4,5，6，8，11，12，13，17，18，19，20，21，22，23，24，25，26，27，28，29，30，31，32，33)
+                      AND TO_CHAR(sr.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
+                      ORDER BY sr.RECV_DATE_TIME''',
             "out_stock": '''SELECT sd.DO_DATE_TIME 出库时间
-              ,sd.FACILITY_ALIAS_ID 出库仓库号
-              ,sd.LOCN_AREA  出库仓间号
-              ,sd.LOCN_BRCD  出库仓位号
-              ,sd.ITEM_ID 货品ID
-              ,sd.ITEM_NAME  商品编码
-              ,sd.BATCH_NBR  生产批次号
-              ,sd.ON_HAND_QTY  数量
-              ,sd.CUSTOMER_NAME 收货方名称
-              ，sd.CUSTOMER_ADDR 收货方地址
-              ,sd.DIRECTION 业务描述
-              FROM SEND_DO_LIST_TO_GOV sd
-              WHERE sd.COMPANY_CODE ='SCRC' AND sd.FACILITY_ALIAS_ID ='HS01'AND sd.DIRECTION IN ('原箱出库','拼箱出库')
-              AND sd.LOCN_AREA in(4,5，6，8，11，12，13，17，18，19，20，21，22，23，24，25，26，27，28，29，30，31，32，33)
-              AND TO_CHAR(sd.DO_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
-              ORDER BY sd.DO_DATE_TIME''',
+      ,sd.FACILITY_ALIAS_ID 出库仓库号
+      ,sd.LOCN_AREA  出库仓间号
+      ,sd.LOCN_BRCD  出库仓位号
+      ,sd.ITEM_ID 货品ID
+      ,sd.ITEM_NAME  商品编码
+      ,sd.BATCH_NBR  生产批次号
+      ,sd.ON_HAND_QTY  数量
+      ,sd.CUSTOMER_NAME 收货方名称
+      ,sd.CUSTOMER_ADDR 收货方地址
+      ,sd.DIRECTION 业务描述
+      --,sd.*
+      --,vb.CARRIERNAME AS 运输公司名称
+      ,case when vb.TRANSMETHOD ='自车' then '国药试剂' else vb.CARRIERNAME end as 运输公司名称
+      --,vb.GOODSCLASSNAME AS 运输车辆类型
+      ,case when vb.GOODSCLASSNAME IS NOT NULL THEN '3' else vb.GOODSCLASSNAME end as 运输车辆类型
+      ,vb.LICENSENO AS 车牌号
+      ,vb.DRIVERNAME AS 驾驶员
+      ,vb.DRIVERIDCARDNO AS 驾驶员身份证
+      ,vb.SUPERCARGONAME AS 押运员
+      ,vb.SUPERCARGOIDCARDNO AS 押运员身份证
+      ,vb.TALLYNO AS 状态
+      --,vb.* 
+      FROM SEND_DO_LIST_TO_GOV sd 
+      LEFT JOIN v_boxno_follow@link_tms vb ON sd.CASE_NBR =vb.boxno
+      WHERE sd.COMPANY_CODE ='SCRC' AND sd.FACILITY_ALIAS_ID ='HS01'AND sd.DIRECTION IN ('原箱出库','拼箱出库')
+      --AND sd.LOCN_AREA in(4,5，6，8，11，12，13，17，18，19，20，21，22，23，24，25，26，27，28，29，30，31，32，33)
+      AND TO_CHAR(sd.DO_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
+      ORDER BY sd.DO_DATE_TIME''',
             "move_stock": '''select sr.RECV_DATE_TIME as 移库时间,      sd.FACILITY_ALIAS_ID as 移出仓库号,     sd.LOCN_AREA as 移出仓间号,
            sd.LOCN_BRCD as 移出仓位号,         sd.id   as 出库ID,                      sr.FACILITY_ALIAS_ID as 目标仓库号,     
            sr.LOCN_AREA as 目标仓间号,         sr.LOCN_BRCD as 目标仓位号,             sr.id    as 入库ID,
@@ -88,7 +102,7 @@ class Api(object):
     AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
         '''
         }
-        self.map = {
+        self._map = {
             "stock": {
                 "仓库号": "warehouseCode",
                 "仓间号": "warehouseAreaCode",
@@ -156,18 +170,18 @@ class Api(object):
                             "规格包装单位名称": "specification",
                             }
         }
-        self.con = None
-        self.cursor = None
+        self._con = None
+        self._cursor = None
 
     def connect(self):
-        self.con = cx.connect("MANH_WM", "MANH_WM", "10.3.0.73:1521/orcl")
-        self.cursor = self.con.cursor()
+        self._con = cx.connect("MANH_WM", "MANH_WM", "10.3.0.73:1521/orcl")
+        self._cursor = self._con.cursor()
 
     def trans_res(self, result):
         list_result = []
         for i in result:
             list_list = list(i)
-            des = self.cursor.description  # 获取表详情，字段名，长度，属性等
+            des = self._cursor.description  # 获取表详情，字段名，长度，属性等
             t = ",".join([item[0] for item in des])
             table_head = t.split(',')  # # 查询表列名 用,分割
             dict_result = dict(zip(table_head, list_list))  # 打包为元组的列表 再转换为字典
@@ -209,9 +223,9 @@ class Api(object):
           ORDER BY si.LOCN_AREA
                   ,si.LOCN_BRCD
                   ,si.ITEM_NAME''' % (warehouseCode, warehouseAreaCode, locationCode, merchandiseId)
-        self.cursor.execute(sql)
-        result = self.cursor.fetchall()
-        list_result = self.map_list_res(self.trans_res(result), self.map['stock'])
+        self._cursor.execute(sql)
+        result = self._cursor.fetchall()
+        list_result = self._map_list_res(self.trans_res(result), self._map['stock'])
         if len(list_result) > 0:
             return list_result[0]
         else:
@@ -230,12 +244,12 @@ class Api(object):
         return res.json()
 
     def call_java_api(self, key):
-        self.connect()
+        self._connect()
         logs = []
         if key == "move_stock":
-            self.cursor.execute(self.sql[key])
-            result = self.cursor.fetchall()
-            list_result = self.map_list_res(self.trans_res(result), self.map[key])  # 拼装映射查询结果
+            self._cursor.execute(self._sql[key])
+            result = self._cursor.fetchall()
+            list_result = self._map_list_res(self.trans_res(result), self._map[key])  # 拼装映射查询结果
             for item in list_result:
                 now = datetime.datetime.now()
                 if (now - item['transferTime']).seconds < 60 * 200:
@@ -268,15 +282,16 @@ class Api(object):
 
 
         elif key == "stock":
-            self.cursor.execute(self.sql[key])
-            result = self.cursor.fetchall()
-            list_result = self.map_list_res(self.trans_res(result), self.map[key])
+            self._cursor.execute(self._sql[key])
+            result = self._cursor.fetchall()
+            list_result = self._map_list_res(self.trans_res(result), self._map[key])
             move_post_body = {
                 "type": "fullsync",
                 "data": {"inventoryData": list_result},
                 "router": "/sync/data/inventorySync"
             }
             res = self.post(move_post_body)
+
             logs.append({"api_address": move_post_body["router"],
                          "status": '0' if res["success"] else '1',
                          "res": res,
@@ -286,7 +301,7 @@ class Api(object):
         elif key == "warehouse_area":
             df = pd.read_excel("/opt/odoo-wms/local/wms/data/warehouse_area.xlsx")
             new_cols = []
-            map_dict = self.map[key]
+            map_dict = self._map[key]
             for k in df.columns:
                 if k in map_dict:
                     new_cols.append(map_dict[k])
@@ -312,7 +327,7 @@ class Api(object):
             df.loc[:, '上传《化学品危险性分类报告》'] = df.loc[:, '上传《化学品安全技术说明书》']
             new_cols = []
             del_cols = []
-            map_dict = self.map[key]
+            map_dict = self._map[key]
             for k in df.columns:
                 if k in map_dict:
                     new_cols.append(map_dict[k])
@@ -358,5 +373,5 @@ class Api(object):
             df.to_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", index=False)
 
         return logs
-        self.cursor.close()
-        self.con.close()
+        self._cursor.close()
+        self._con.close()

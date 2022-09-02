@@ -5,7 +5,6 @@ class Merchandise(models.Model):
 
     # 主键
     merchandise_id = fields.Integer(string="货品ID", required=True)
-    organization_id = fields.Many2one("wms.organization", string="所属机构", required=True)
     merchandise_name = fields.Char(string="货品名称", size=128, required=True)
     owner_id = fields.Char(string="货主ID", size=128, required=True)
     owner_name = fields.Char(string="货主名称", size=128, required=True)
