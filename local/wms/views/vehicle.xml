@@ -7,16 +7,16 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-<!--    <record id='wms_vehicle_out_action' model='ir.actions.act_window'>-->
-<!--        <field name="name">危险品车辆出厂</field>-->
-<!--        <field name="res_model">wms.vehicle</field>-->
-<!--        <field name="view_mode">tree,form</field>-->
-<!--        <field name="context">{'search_default_out':1}</field>-->
-<!--    </record>-->
+    <record id='wms_vehicle_out_action' model='ir.actions.act_window'>
+        <field name="name">危险品车辆出厂</field>
+        <field name="res_model">wms.vehicle</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_out':1}</field>
+    </record>
 
     <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
     <menuitem name="危险品车辆出入记录" id="wms_vehicle_menu" parent="wms_base_menu" action="wms_vehicle_action"/>
-<!--    <menuitem name="危险品车辆出厂" id="wms_vehicle_out_menu" parent="wms_base_menu" action="wms_vehicle_out_action"/>-->
+    <menuitem name="危险品车辆出厂" id="wms_vehicle_out_menu" parent="wms_base_menu" action="wms_vehicle_out_action"/>
 
 
     <record id="vehicle_search" model="ir.ui.view">
