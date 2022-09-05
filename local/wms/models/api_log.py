@@ -506,8 +506,8 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                              "res": res
                              })
         elif key == "warehouse_area":
-            # df = pd.read_excel("/opt/odoo-wms/local/wms/data/warehouse_area.xlsx")
-            df = pd.read_excel("/home/rainbow/Documents/odoo-wms/local/wms/data/warehouse_area.xlsx")
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/warehouse_area.xlsx")
+            # df = pd.read_excel("/home/rainbow/Documents/odoo-wms/local/wms/data/warehouse_area.xlsx")
             new_cols = []
             map_dict = self._map[key]
             for k in df.columns:
@@ -537,9 +537,9 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                          "res": res
                          })
         elif key == "merchandise":
-            # df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", dtype={"危险货物类别": str})
-            df = pd.read_excel("/home/rainbow/Documents/odoo-wms/local/wms/data/merchandise_file.xlsx",
-                               dtype={"危险货物类别": str})
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", dtype={"危险货物类别": str})
+            # df = pd.read_excel("/home/rainbow/Documents/odoo-wms/local/wms/data/merchandise_file.xlsx",
+            #                    dtype={"危险货物类别": str})
             new_cols = []
             del_cols = []
             map_dict = self._map[key]
@@ -559,18 +559,19 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
             for item in merchandise_dict_list:
                 self.env['wms.merchandise'].create(self._trans_api_to_model_data(item))
 
-            move_post_body = {
-                "type": "fullsync",
-                "data": {"merchandiseData": merchandise_dict_list},
-                "router": "/sync/data/merchandiseSync"
-            }
 
-            res = self._post(move_post_body)
-            logs.append({"api_address": move_post_body["router"],
-                         "status": '0' if res["success"] else '1',
-                         "body": "",
-                         "res": res
-                         })
+            # move_post_body = {
+            #     "type": "fullsync",
+            #     "data": {"merchandiseData": merchandise_dict_list},
+            #     "router": "/sync/data/merchandiseSync"
+            # }
+            #
+            # res = self._post(move_post_body)
+            # logs.append({"api_address": move_post_body["router"],
+            #              "status": '0' if res["success"] else '1',
+            #              "body": "",
+            #              "res": res
+            #              })
         elif key == "merchandise_files":
             df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx", dtype={"危险货物类别": str})
             code_list = list(set(df['CAS索引号']))
