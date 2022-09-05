@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='wms_out_stock_action' model='ir.actions.act_window'>
+        <field name="name">出库表</field>
+        <field name="res_model">wms.out.stock</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
+    <menuitem name="出库表" id="wms_out_stock_menu" parent="wms_base_menu" action="wms_out_stock_action"/>
+
+    <record id="wms_out_stock_view_tree" model="ir.ui.view">
+        <field name="name">wms.out.stock</field>
+        <field name="model">wms.out.stock</field>
+        <field name="arch" type="xml">
+            <tree string="出库表" >
+                <field name="o_id"/>
+                <field name="vehicle_id"/>
+                <field name="carrier_plate_number"/>
+                <field name="outbound_time"></field>
+                <field name="warehouse_type"></field>
+                <field name="warehouse_code"></field>
+                <field name="warehouse_area_code"/>
+                <field name="location_code"/>
+                <field name="merchandise_id"/>
+                <field name="batch_code"/>
+                <field name="amount"/>
+                <field name="consignee_name"/>
+                <field name="consignee_address"/>
+                <field name="report_time"/>
+            </tree>
+        </field>
+    </record>
+
+
+</odoo>

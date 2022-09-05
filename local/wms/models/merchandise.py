@@ -8,6 +8,7 @@ class Merchandise(models.Model):
     merchandise_name = fields.Char(string="货品名称", size=128, required=True)
     owner_id = fields.Char(string="货主ID", size=128, required=True)
     owner_name = fields.Char(string="货主名称", size=128, required=True)
+    warehouse_type = fields.Integer(string="货品存储空间类型",required=True , help="0:储罐，1：仓库")
     # 单选
     is_mixture = fields.Integer(string="是否为混合物", required=True, help="0:否，1：是")
     chemical_name = fields.Char(string="危险化学品名", size=128, required=True)

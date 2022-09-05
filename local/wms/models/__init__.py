@@ -5,9 +5,10 @@ from . import merchandise
 # from . import organization_employee
 # from . import region
 from . import stock
-# from . import stock_transaction
+from . import in_stock
+from . import out_stock
+from . import move_stock
 from . import warehouse_area
-# from . import stock_loading
 from . import vehicle
 # from . import api_config
 # from . import api_view
