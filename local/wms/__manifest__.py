@@ -8,7 +8,7 @@
         'views/out_stock.xml',
         'views/move_stock.xml',
         'views/vehicle.xml',
-        # 'views/api_log.xml'
+        'views/api_log.xml'
     ],
     'assets': {
         'web.assets_backend': [
