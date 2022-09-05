@@ -1,5 +1,6 @@
 # from . import address
 # from . import organization
+# from . import api_log
 from . import merchandise
 # from . import organization_car
 # from . import organization_employee
@@ -12,4 +13,3 @@ from . import warehouse_area
 from . import vehicle
 # from . import api_config
 # from . import api_view
-from . import api_log
