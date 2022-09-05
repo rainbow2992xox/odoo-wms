@@ -11,7 +11,6 @@
         <field name="name">危险品车辆出厂</field>
         <field name="res_model">wms.vehicle</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="wms_vehicle_view_list"/>
         <field name="context">{'search_default_out':1}</field>
     </record>
 
