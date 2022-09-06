@@ -49,9 +49,7 @@ class Vehicle(models.Model):
         idcard = str(idcard)
         idcard = idcard.strip()
         idcard_list = list(idcard)
-        # 地区校验
-        if not area[(idcard)[0:2]]:
-            return (False, Errors[4])
+
 
         # 15位身份号码检测
         if len(idcard) == 15:
@@ -102,6 +100,10 @@ class Vehicle(models.Model):
                 return (False, Errors[2])
         else:
             return (False, Errors[1])
+
+        # 地区校验
+        if not area[(idcard)[0:2]]:
+            return (False, Errors[4])
 
     def plate_number_check(self, plate_number):
         pattern_str = '([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1}(([A-HJ-NP-Z0-9]{5}[DF]{1})|([DF]{1}[A-HJ-NP-Z0-9]{5})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1})'
