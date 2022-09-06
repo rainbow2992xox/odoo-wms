@@ -137,7 +137,7 @@ class Vehicle(models.Model):
 
     def create_vehicle_out(self):
         for select_records in self:
-            if select_records.vehicle_out_id == None and select_records.enter_exit_type == '0':
+            if select_records.vehicle_out_id == 0 and select_records.enter_exit_type == '0':
                 enter_exit_time = datetime.datetime.now()
                 record = {
                     "carrier_plate_number": select_records.carrier_plate_number,
