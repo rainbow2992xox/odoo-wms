@@ -289,6 +289,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                                                              'report_time']))
 
                     # 将datetime格式转时间戳
+                    transferData['transferTime'] = transferData['transferTime'] - datetime.timedelta(hours=8)
                     transferData['transferTime'] = int(time.mktime(transferData['transferTime'].timetuple()))
 
                     # 查询出仓库位状态
@@ -371,15 +372,17 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
 
                     if len(vehicle_res) > 0 and len(stock_res) > 0:
                         vehicle_data = self._trans_record_to_dict(vehicle_res[0],
-                                                                  del_keys=['enter_exit_type','vehicle_out_id','enter_exit_time', 'carrier_plate_number',
+                                                                  del_keys=['enter_exit_type', 'vehicle_out_id',
+                                                                            'enter_exit_time', 'carrier_plate_number',
                                                                             'in_stock_id', 'out_stock_id',
                                                                             'report_time'])
-                        #出入库承运车辆性质和车辆出入记录定义不同
+                        # 出入库承运车辆性质和车辆出入记录定义不同
                         vehicle_data['carrierPlateType'] = '3'
                         inboundData.update(vehicle_data)
                         inboundData = self._trans_model_to_api_data(inboundData)
 
                         # 将datetime格式转时间戳
+                        inboundData['inboundTime'] = inboundData['inboundTime'] - datetime.timedelta(hours=8)
                         inboundData['inboundTime'] = int(time.mktime(inboundData['inboundTime'].timetuple()))
 
                         inventoryData = self._trans_model_to_api_data(self._trans_record_to_dict(stock_res[0]))
@@ -460,6 +463,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         outboundData = self._trans_model_to_api_data(outboundData)
 
                         # 将datetime格式转时间戳
+                        outboundData['outboundTime'] = outboundData['outboundTime'] - datetime.timedelta(hours=8)
                         outboundData['outboundTime'] = int(time.mktime(outboundData['outboundTime'].timetuple()))
 
                         inventoryData = self._trans_model_to_api_data(self._trans_record_to_dict(stock_res[0]))
@@ -565,7 +569,6 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
             for item in merchandise_dict_list:
                 self.env['wms.merchandise'].create(self._trans_api_to_model_data(item))
 
-
             # move_post_body = {
             #     "type": "fullsync",
             #     "data": {"merchandiseData": merchandise_dict_list},
@@ -604,9 +607,9 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
             vehicle_res = self.env['wms.vehicle'].search([('report_time', '=', None)])
             for record in vehicle_res:
                 vehicleData = self._trans_model_to_api_data(self._trans_record_to_dict(record, del_keys=['in_stock_id',
-                                                                                                          'out_stock_id',
-                                                                                                          'vehicle_out_id',
-                                                                                                          'report_time']))
+                                                                                                         'out_stock_id',
+                                                                                                         'vehicle_out_id',
+                                                                                                         'report_time']))
 
                 vehicleData['enterExitTime'] = int(time.mktime(vehicleData['enterExitTime'].timetuple()))
                 move_post_body = {

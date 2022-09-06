@@ -3,7 +3,7 @@ from odoo import models, fields
 class OutStock(models.Model):
     _name = "wms.out.stock"
 
-    outbound_time = fields.Datetime(string='入库时间')
+    outbound_time = fields.Datetime(string='出库时间')
     warehouse_type = fields.Integer(string="仓储空间类型")
     warehouse_code = fields.Char(string="入库仓库号", size=32)
     warehouse_area_code = fields.Char(string="入库仓间号", size=32)
