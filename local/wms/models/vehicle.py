@@ -135,32 +135,37 @@ class Vehicle(models.Model):
 
     def create_vehicle_out(self):
         for select_records in self:
-            enter_exit_time = datetime.datetime.now()
-            record = {
-                "carrier_plate_number": select_records.carrier_plate_number,
-                "enter_exit_time": enter_exit_time,
-                "enter_exit_type": '1',
-                "carrier_name": select_records.carrier_name,
-                "carrier_plate_type": select_records.carrier_plate_type,
-                "carrier_driver_name": select_records.carrier_driver_name,
-                "carrier_driver_idcard": select_records.carrier_driver_idcard,
-                "escort": select_records.escort,
-                "escort_idcard": select_records.escort_idcard,
-                "in_stock_id": select_records.in_stock_id,
-                "out_stock_id": select_records.out_stock_id,
-                "vehicle_out_id": None,
-                "report_time": None
-            }
+            if select_records.vehicle_out_id == None and select_records.enter_exit_type == '0':
+                enter_exit_time = datetime.datetime.now()
+                record = {
+                    "carrier_plate_number": select_records.carrier_plate_number,
+                    "enter_exit_time": enter_exit_time,
+                    "enter_exit_type": '1',
+                    "carrier_name": select_records.carrier_name,
+                    "carrier_plate_type": select_records.carrier_plate_type,
+                    "carrier_driver_name": select_records.carrier_driver_name,
+                    "carrier_driver_idcard": select_records.carrier_driver_idcard,
+                    "escort": select_records.escort,
+                    "escort_idcard": select_records.escort_idcard,
+                    "in_stock_id": select_records.in_stock_id,
+                    "out_stock_id": select_records.out_stock_id,
+                    "vehicle_out_id": None,
+                    "report_time": None
+                }
 
-            create_record = self.env['wms.vehicle'].create(record)
-            select_records.write({"vehicle_out_id": create_record.id})
 
-            return {
-                'name': "危险品车辆出厂",
-                'view_mode': 'tree,form',
-                'res_model': 'wms.vehicle',
-                'context': {'search_default_out':1},
-                'view_id': False,
-                'type': 'ir.actions.act_window',
-            }
+                create_record = self.env['wms.vehicle'].create(record)
+                select_records.write({"vehicle_out_id": create_record.id})
+
+
+                return {
+                    'name': "危险品车辆出厂",
+                    'view_mode': 'tree,form',
+                    'res_model': 'wms.vehicle',
+                    'context': {'search_default_out':1},
+                    'view_id': False,
+                    'type': 'ir.actions.act_window',
+                }
+            else:
+                raise models.ValidationError("该车已出厂")
 
