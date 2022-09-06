@@ -371,7 +371,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
 
                     if len(vehicle_res) > 0 and len(stock_res) > 0:
                         vehicle_data = self._trans_record_to_dict(vehicle_res[0],
-                                                                  del_keys=['vehicle_out_id','enter_exit_time', 'carrier_plate_number',
+                                                                  del_keys=['enter_exit_type','vehicle_out_id','enter_exit_time', 'carrier_plate_number',
                                                                             'in_stock_id', 'out_stock_id',
                                                                             'report_time'])
                         inboundData.update(vehicle_data)
