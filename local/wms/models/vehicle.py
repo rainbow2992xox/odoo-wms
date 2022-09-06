@@ -12,7 +12,7 @@ class Vehicle(models.Model):
     enter_exit_time = fields.Datetime(string="出入时间", required=True)
     enter_exit_type = fields.Selection([('0', '进入'), ('1', '出去')], string='出入类型', required=True, default='0',
                                        readonly=True)
-    carrier_plate_type = fields.Selection([('0', '非危险化学品车'), ('1', '危险化学品车')], string='车辆性质',
+    carrier_plate_type = fields.Selection([('0', '非危险化学品车'), ('1', '危险化学品车')], string='车辆性质', default='1',
                                           required=True)
 
     carrier_name = fields.Char(string="承运企业名称", required=True, size=32)

@@ -374,6 +374,8 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                                                                   del_keys=['enter_exit_type','vehicle_out_id','enter_exit_time', 'carrier_plate_number',
                                                                             'in_stock_id', 'out_stock_id',
                                                                             'report_time'])
+                        #出入库承运车辆性质和车辆出入记录定义不同
+                        vehicle_data['carrierPlateType'] = '3'
                         inboundData.update(vehicle_data)
                         inboundData = self._trans_model_to_api_data(inboundData)
 
@@ -447,9 +449,13 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
 
                     if len(vehicle_res) > 0 and len(stock_res) > 0:
                         vehicle_data = self._trans_record_to_dict(vehicle_res[0],
-                                                                  del_keys=['enter_exit_time', 'carrier_plate_number',
+                                                                  del_keys=['enter_exit_type', 'vehicle_out_id',
+                                                                            'enter_exit_time', 'carrier_plate_number',
                                                                             'in_stock_id', 'out_stock_id',
                                                                             'report_time'])
+
+                        # 出入库承运车辆性质和车辆出入记录定义不同
+                        vehicle_data['carrierPlateType'] = '3'
                         outboundData.update(vehicle_data)
                         outboundData = self._trans_model_to_api_data(outboundData)
 
