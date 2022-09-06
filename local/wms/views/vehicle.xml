@@ -7,16 +7,16 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <record id='wms_vehicle_out_action' model='ir.actions.act_window'>
-        <field name="name">危险品车辆出厂</field>
-        <field name="res_model">wms.vehicle</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_out':1}</field>
-    </record>
+<!--    <record id='wms_vehicle_out_action' model='ir.actions.act_window'>-->
+<!--        <field name="name">危险品车辆出厂</field>-->
+<!--        <field name="res_model">wms.vehicle</field>-->
+<!--        <field name="view_mode">tree,form</field>-->
+<!--        <field name="context">{'search_default_out':1}</field>-->
+<!--    </record>-->
 
     <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
     <menuitem name="危险品车辆出入记录" id="wms_vehicle_menu" parent="wms_base_menu" action="wms_vehicle_action"/>
-    <menuitem name="危险品车辆出厂" id="wms_vehicle_out_menu" parent="wms_base_menu" action="wms_vehicle_out_action"/>
+<!--    <menuitem name="危险品车辆出厂" id="wms_vehicle_out_menu" parent="wms_base_menu" action="wms_vehicle_out_action"/>-->
 
 
     <record id="vehicle_search" model="ir.ui.view">
@@ -46,38 +46,38 @@
 <!--        <field name="act_window_id" ref="wms_vehicle_out_action"/>-->
 <!--    </record>-->
 
-    <record id="wms_vehicle_view_form_simplified2" model="ir.ui.view">
-        <field name="name">wms.vehicle.view.form.simplified</field>
-        <field name="model">wms.vehicle</field>
-        <field name="arch" type="xml">
-            <form create="false" edit="false">
-                <header>
-                    <button name="create_vehicle_out" string="出厂" type="object" class="oe_highlight"
-                            confirm='是否确认该车辆出厂？'/>
-                </header>
-                <sheet>
-                    <group col='4' string="车辆信息">
-                        <field name="enter_exit_time" attrs="{'readonly': 1}"/>
-                        <field name="carrier_plate_number" attrs="{'readonly': 1}"/>
-                        <field name="enter_exit_type" attrs="{'readonly': 1}"/>
-                        <field name="carrier_plate_type" attrs="{'readonly': 1}"/>
-                    </group>
-                    <group string="企业信息">
-                        <field name="carrier_name" attrs="{'readonly': 1}"/>
-                    </group>
-                    <group col='4' string="驾驶员信息">
-                        <field name="carrier_driver_name" attrs="{'readonly': 1}"/>
-                        <field name="carrier_driver_idcard" attrs="{'readonly': 1}"/>
-                    </group>
+<!--    <record id="wms_vehicle_view_form_simplified2" model="ir.ui.view">-->
+<!--        <field name="name">wms.vehicle.view.form.simplified</field>-->
+<!--        <field name="model">wms.vehicle</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <form create="false" edit="false">-->
+<!--                <header>-->
+<!--                    <button name="create_vehicle_out" string="出厂" type="object" class="oe_highlight"-->
+<!--                            confirm='是否确认该车辆出厂？'/>-->
+<!--                </header>-->
+<!--                <sheet>-->
+<!--                    <group col='4' string="车辆信息">-->
+<!--                        <field name="enter_exit_time" attrs="{'readonly': 1}"/>-->
+<!--                        <field name="carrier_plate_number" attrs="{'readonly': 1}"/>-->
+<!--                        <field name="enter_exit_type" attrs="{'readonly': 1}"/>-->
+<!--                        <field name="carrier_plate_type" attrs="{'readonly': 1}"/>-->
+<!--                    </group>-->
+<!--                    <group string="企业信息">-->
+<!--                        <field name="carrier_name" attrs="{'readonly': 1}"/>-->
+<!--                    </group>-->
+<!--                    <group col='4' string="驾驶员信息">-->
+<!--                        <field name="carrier_driver_name" attrs="{'readonly': 1}"/>-->
+<!--                        <field name="carrier_driver_idcard" attrs="{'readonly': 1}"/>-->
+<!--                    </group>-->
 
-                    <group col='4' string="押运员信息">
-                        <field name="escort" attrs="{'readonly': 1}"/>
-                        <field name="escort_idcard" attrs="{'readonly': 1}"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
+<!--                    <group col='4' string="押运员信息">-->
+<!--                        <field name="escort" attrs="{'readonly': 1}"/>-->
+<!--                        <field name="escort_idcard" attrs="{'readonly': 1}"/>-->
+<!--                    </group>-->
+<!--                </sheet>-->
+<!--            </form>-->
+<!--        </field>-->
+<!--    </record>-->
 
     <record id="wms_vehicle_view_form_simplified" model="ir.ui.view">
         <field name="name">wms.vehicle.view.form.simplified</field>
