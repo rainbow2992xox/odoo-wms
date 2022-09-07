@@ -25,7 +25,7 @@
         <field name="arch" type="xml">
             <search string="车牌号搜索">
                 <filter name="out" string="未出厂车辆"
-                        domain="  [('enter_exit_type', '=', '0'), ('vehicle_out_id', '=', None)]"/>
+                        domain="  [('enter_exit_type', '=', '0'), ('vehicle_out_id', '=', 0)]"/>
                 <field name="carrier_plate_number" string="车牌号"
                        filter_domain="[('carrier_plate_number','ilike',self)]"/>
             </search>
@@ -33,17 +33,22 @@
     </record>
 
 
-
     <record id="wms_vehicle_view_form_simplified2" model="ir.ui.view">
         <field name="name">wms.vehicle.view.form.simplified</field>
         <field name="model">wms.vehicle</field>
         <field name="arch" type="xml">
             <form create="false" edit="false">
-                <header>
-                    <button name="create_vehicle_out" string="出厂" type="object" class="oe_highlight"
-                            confirm='是否确认该车辆出厂？'/>
-                </header>
                 <sheet>
+                    <group col='6'>
+                        <button name="create_vehicle_out" string="出厂" type="object" class="oe_highlight"
+                                confirm='是否确认该车辆出厂？'/>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <button name="copy_vehicle_in" string="复制为进厂记录" type="object"
+                                confirm='是否确认复制该条记录？'/>
+                    </group>
                     <group col='4' string="车辆信息">
                         <field name="enter_exit_time" attrs="{'readonly': 1}"/>
                         <field name="carrier_plate_number" attrs="{'readonly': 1}"/>
@@ -73,6 +78,16 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <group col='6'>
+                        <button name="create_vehicle_out" string="出厂" type="object" class="oe_highlight"
+                                confirm='是否确认该车辆出厂？'/>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <button name="copy_vehicle_in" string="复制为进厂记录" type="object"
+                                confirm='是否确认复制该条记录？'/>
+                    </group>
                     <group col='4' string="车辆信息">
                         <field name="enter_exit_time" required="1"/>
                         <field name="carrier_plate_number" required="1"/>

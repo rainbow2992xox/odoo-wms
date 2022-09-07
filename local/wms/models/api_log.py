@@ -462,6 +462,9 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         outboundData.update(vehicle_data)
                         outboundData = self._trans_model_to_api_data(outboundData)
 
+                        # 出库收货地址暂时截取16位
+                        outboundData["consigneeAddress"] = outboundData["consigneeAddress"][0:15]
+
                         # 将datetime格式转时间戳
                         outboundData['outboundTime'] = outboundData['outboundTime'] - datetime.timedelta(hours=8)
                         outboundData['outboundTime'] = int(time.mktime(outboundData['outboundTime'].timetuple()))

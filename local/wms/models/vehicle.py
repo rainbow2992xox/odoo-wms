@@ -135,6 +135,33 @@ class Vehicle(models.Model):
         if Errors:
             raise models.ValidationError('\n'.join(Errors))
 
+    def copy_vehicle_in(self):
+        for select_records in self:
+            record = {
+                "carrier_plate_number": select_records.carrier_plate_number,
+                "enter_exit_time": select_records.enter_exit_time,
+                "enter_exit_type": '0',
+                "carrier_name": select_records.carrier_name,
+                "carrier_plate_type": select_records.carrier_plate_type,
+                "carrier_driver_name": select_records.carrier_driver_name,
+                "carrier_driver_idcard": select_records.carrier_driver_idcard,
+                "escort": select_records.escort,
+                "escort_idcard": select_records.escort_idcard,
+                "in_stock_id": None,
+                "out_stock_id": None,
+                "vehicle_out_id": None,
+                "report_time": None
+            }
+            create_record = self.env['wms.vehicle'].create(record)
+
+            return {
+                'name': "车辆出入记录",
+                'view_mode': 'tree,form',
+                'res_model': 'wms.vehicle',
+                'view_id': False,
+                'type': 'ir.actions.act_window',
+            }
+
     def create_vehicle_out(self):
         for select_records in self:
             if select_records.vehicle_out_id == 0 and select_records.enter_exit_type == '0':
