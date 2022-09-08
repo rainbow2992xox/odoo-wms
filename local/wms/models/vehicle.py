@@ -150,7 +150,7 @@ class Vehicle(models.Model):
         for select_records in self:
             record = {
                 "default_carrier_plate_number": select_records.carrier_plate_number,
-                "default_enter_exit_time": select_records.enter_exit_time,
+                "default_enter_exit_time": datetime.datetime.now(),
                 "default_enter_exit_type": '0',
                 "default_carrier_name": select_records.carrier_name,
                 "default_carrier_plate_type": select_records.carrier_plate_type,
