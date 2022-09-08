@@ -152,7 +152,7 @@
         <field name="name">车辆出入记录</field>
         <field name="model">wms.vehicle</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree default_order='enter_exit_time desc'>
                 <field name="enter_exit_time" required="1"/>
                 <field name="carrier_plate_number" required="1"/>
                 <field name="carrier_name" required="1"/>

@@ -14,7 +14,7 @@
         <field name="name">wms.move.stock</field>
         <field name="model">wms.move.stock</field>
         <field name="arch" type="xml">
-            <tree string="移库表" >
+            <tree string="移库表" default_order='create_date desc'>
                 <field name="transfer_time"></field>
                 <field name="warehouse_type"></field>
                 <field name="from_warehouse_code"></field>

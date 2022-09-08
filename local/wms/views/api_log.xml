@@ -14,7 +14,7 @@
         <field name="name">wms.api.log.tree</field>
         <field name="model">wms.api.log</field>
         <field name="arch" type="xml">
-            <tree string="API调用日志" >
+            <tree string="API调用日志" default_order='create_date desc' >
                 <field name="create_date" string="调用时间"></field>
                 <field name="api_address"/>
                 <field name="status"/>
