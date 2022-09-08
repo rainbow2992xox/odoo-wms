@@ -32,6 +32,44 @@
         </field>
     </record>
 
+    <record id="wms_vehicle_view_form_simplified_copy" model="ir.ui.view">
+        <field name="name">wms.vehicle.view.form.simplified.copy</field>
+        <field name="model">wms.vehicle</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <footer>
+                    <xpath expr="//button[@class='o_form_button_save']" position="attribute">
+                        <attribute name="invisible"/>
+                    </xpath>
+                </footer>
+                <sheet>
+                    <group>
+                         <button name="copy_vehicle_in" string="复制" type="object" class="oe_highlight"
+                                confirm='是否确认复制？'/>
+                    </group>
+                    <group col='4' string="车辆信息">
+                        <field name="enter_exit_time"/>
+                        <field name="carrier_plate_number"/>
+                        <field name="enter_exit_type"/>
+                        <field name="carrier_plate_type"/>
+                    </group>
+                    <group string="企业信息">
+                        <field name="carrier_name"/>
+                    </group>
+                    <group col='4' string="驾驶员信息">
+                        <field name="carrier_driver_name"/>
+                        <field name="carrier_driver_idcard"/>
+                    </group>
+
+                    <group col='4' string="押运员信息">
+                        <field name="escort"/>
+                        <field name="escort_idcard"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
 
     <record id="wms_vehicle_view_form_simplified2" model="ir.ui.view">
         <field name="name">wms.vehicle.view.form.simplified</field>
@@ -46,8 +84,7 @@
                         <span></span>
                         <span></span>
                         <span></span>
-                        <button name="copy_vehicle_in" string="复制为进厂记录" type="object" class="oe_highlight"
-                                confirm='是否确认复制该条记录？'/>
+<!--                        <button name="open_vehicle_copy_view" string="复制为进厂记录" type="object" class="oe_highlight"/>-->
                     </group>
                     <group col='4' string="车辆信息">
                         <field name="enter_exit_time" attrs="{'readonly': 1}"/>
@@ -85,8 +122,7 @@
                         <span></span>
                         <span></span>
                         <span></span>
-                        <button name="copy_vehicle_in" string="复制为进厂记录" type="object" class="oe_highlight"
-                                confirm='是否确认复制该条记录？'/>
+                        <button name="open_vehicle_copy_view" string="复制为进厂记录" type="object" class="oe_highlight"/>
                     </group>
                     <group col='4' string="车辆信息">
                         <field name="enter_exit_time" required="1"/>
