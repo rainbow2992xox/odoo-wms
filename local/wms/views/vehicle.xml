@@ -46,7 +46,7 @@
                         <span></span>
                         <span></span>
                         <span></span>
-                        <button name="copy_vehicle_in" string="复制为进厂记录" type="object"
+                        <button name="copy_vehicle_in" string="复制为进厂记录" type="object" class="oe_highlight"
                                 confirm='是否确认复制该条记录？'/>
                     </group>
                     <group col='4' string="车辆信息">
@@ -85,7 +85,7 @@
                         <span></span>
                         <span></span>
                         <span></span>
-                        <button name="copy_vehicle_in" string="复制为进厂记录" type="object"
+                        <button name="copy_vehicle_in" string="复制为进厂记录" type="object" class="oe_highlight"
                                 confirm='是否确认复制该条记录？'/>
                     </group>
                     <group col='4' string="车辆信息">
