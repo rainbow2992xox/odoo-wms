@@ -44,7 +44,7 @@
                 </footer>
                 <sheet>
                     <group>
-                         <button name="copy_vehicle_in" string="复制" type="object" class="oe_highlight"
+                        <button name="copy_vehicle_in" string="复制" type="object" class="oe_highlight"
                                 confirm='是否确认复制？'/>
                     </group>
                     <group col='4' string="车辆信息">
@@ -56,20 +56,37 @@
                     <group string="企业信息">
                         <field name="carrier_name"/>
                     </group>
-                    <group col='4' string="驾驶员信息">
+                    <group col='2' string="驾驶员信息">
                         <field name="carrier_driver_name"/>
                         <field name="carrier_driver_idcard"/>
+                        <field name="carrier_driver_phone"/>
+                        <field name="carrier_driver_certificate"/>
+                        <field name="carrier_driver_nuclear_acid_time"/>
+                        <field name="carrier_driver_nuclear_acid_result"/>
+                        <field name="carrier_driver_antigen_test_time"/>
+                        <field name="carrier_driver_antigen_test_result"/>
+                        <field name="carrier_driver_temperature"/>
                     </group>
 
-                    <group col='4' string="押运员信息">
+                    <group col='2' string="押运员信息">
                         <field name="escort"/>
                         <field name="escort_idcard"/>
+                        <field name="escort_phone"/>
+                        <field name="escort_driver_certificate"/>
+                        <field name="escort_driver_nuclear_acid_time"/>
+                        <field name="escort_driver_nuclear_acid_result"/>
+                        <field name="escort_driver_antigen_test_time"/>
+                        <field name="escort_driver_antigen_test_result"/>
+                        <field name="escort_driver_temperature"/>
+                    </group>
+
+                    <group col='4' string="登记员信息">
+                        <field name="registrar"/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
-
 
     <record id="wms_vehicle_view_form_simplified2" model="ir.ui.view">
         <field name="name">wms.vehicle.view.form.simplified</field>
@@ -84,25 +101,42 @@
                         <span></span>
                         <span></span>
                         <span></span>
-<!--                        <button name="open_vehicle_copy_view" string="复制为进厂记录" type="object" class="oe_highlight"/>-->
                     </group>
                     <group col='4' string="车辆信息">
                         <field name="enter_exit_time" attrs="{'readonly': 1}"/>
                         <field name="carrier_plate_number" attrs="{'readonly': 1}"/>
-                        <field name="enter_exit_type" attrs="{'readonly': 1}"/>
+                        <!--                        <field name="enter_exit_type" attrs="{'readonly': 1}"/>-->
                         <field name="carrier_plate_type" attrs="{'readonly': 1}"/>
                     </group>
                     <group string="企业信息">
                         <field name="carrier_name" attrs="{'readonly': 1}"/>
                     </group>
-                    <group col='4' string="驾驶员信息">
+                    <group col='2' string="驾驶员信息">
                         <field name="carrier_driver_name" attrs="{'readonly': 1}"/>
                         <field name="carrier_driver_idcard" attrs="{'readonly': 1}"/>
+                        <field name="carrier_driver_phone" attrs="{'readonly': 1}"/>
+                        <field name="carrier_driver_certificate" attrs="{'readonly': 1}"/>
+                        <field name="carrier_driver_nuclear_acid_time" attrs="{'readonly': 1}"/>
+                        <field name="carrier_driver_nuclear_acid_result" attrs="{'readonly': 1}"/>
+                        <field name="carrier_driver_antigen_test_time" attrs="{'readonly': 1}"/>
+                        <field name="carrier_driver_antigen_test_result" attrs="{'readonly': 1}"/>
+                        <field name="carrier_driver_temperature" attrs="{'readonly': 1}"/>
                     </group>
 
-                    <group col='4' string="押运员信息">
+                    <group col='2' string="押运员信息">
                         <field name="escort" attrs="{'readonly': 1}"/>
                         <field name="escort_idcard" attrs="{'readonly': 1}"/>
+                        <field name="escort_phone" attrs="{'readonly': 1}"/>
+                        <field name="escort_driver_certificate" attrs="{'readonly': 1}"/>
+                        <field name="escort_driver_nuclear_acid_time" attrs="{'readonly': 1}"/>
+                        <field name="escort_driver_nuclear_acid_result" attrs="{'readonly': 1}"/>
+                        <field name="escort_driver_antigen_test_time" attrs="{'readonly': 1}"/>
+                        <field name="escort_driver_antigen_test_result" attrs="{'readonly': 1}"/>
+                        <field name="escort_driver_temperature" attrs="{'readonly': 1}"/>
+                    </group>
+
+                    <group col='4' string="登记员信息">
+                        <field name="registrar" attrs="{'readonly': 1}"/>
                     </group>
                 </sheet>
             </form>
@@ -122,7 +156,8 @@
                         <span></span>
                         <span></span>
                         <span></span>
-                        <button name="open_vehicle_copy_view" string="复制为进厂记录" type="object" class="oe_highlight"/>
+                        <button name="open_vehicle_copy_view" string="复制为进厂记录" type="object"
+                                class="oe_highlight"/>
                     </group>
                     <group col='4' string="车辆信息">
                         <field name="enter_exit_time" required="1"/>
@@ -134,13 +169,31 @@
                         <field name="carrier_name" required="1"/>
                     </group>
                     <group col='4' string="驾驶员信息">
-                        <field name="carrier_driver_name" required="1"/>
-                        <field name="carrier_driver_idcard" required="1"/>
+                        <field name="carrier_driver_name"/>
+                        <field name="carrier_driver_idcard"/>
+                        <field name="carrier_driver_phone"/>
+                        <field name="carrier_driver_certificate"/>
+                        <field name="carrier_driver_nuclear_acid_time"/>
+                        <field name="carrier_driver_nuclear_acid_result"/>
+                        <field name="carrier_driver_antigen_test_time"/>
+                        <field name="carrier_driver_antigen_test_result"/>
+                        <field name="carrier_driver_temperature"/>
                     </group>
 
                     <group col='4' string="押运员信息">
-                        <field name="escort" required="1"/>
-                        <field name="escort_idcard" required="1"/>
+                        <field name="escort"/>
+                        <field name="escort_idcard"/>
+                        <field name="escort_phone"/>
+                        <field name="escort_driver_certificate"/>
+                        <field name="escort_driver_nuclear_acid_time"/>
+                        <field name="escort_driver_nuclear_acid_result"/>
+                        <field name="escort_driver_antigen_test_time"/>
+                        <field name="escort_driver_antigen_test_result"/>
+                        <field name="escort_driver_temperature"/>
+                    </group>
+
+                    <group col='4' string="登记员信息">
+                        <field name="registrar"/>
                     </group>
 
                 </sheet>

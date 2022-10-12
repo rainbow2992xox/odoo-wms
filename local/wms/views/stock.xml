@@ -15,6 +15,7 @@
         <field name="model">wms.stock</field>
         <field name="arch" type="xml">
             <tree string="库存表" default_order='create_date desc'>
+                <field name="report_time"></field>
                 <field name="warehouse_code"></field>
                 <field name="warehouse_area_code"/>
                 <field name="location_code"/>

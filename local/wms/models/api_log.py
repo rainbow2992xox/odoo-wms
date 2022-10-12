@@ -503,6 +503,8 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                 for item in list_result:
                     res = self.env['wms.merchandise'].search([('merchandise_id', '=', item['merchandiseId'])])
                     if len(res) > 0:
+                        record = self._trans_api_to_model_data(item)
+                        record["report_time"] = datetime.datetime.now()
                         self.env['wms.stock'].create(self._trans_api_to_model_data(item))
                         body_list.append(item)
 
@@ -612,7 +614,24 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                 vehicleData = self._trans_model_to_api_data(self._trans_record_to_dict(record, del_keys=['in_stock_id',
                                                                                                          'out_stock_id',
                                                                                                          'vehicle_out_id',
-                                                                                                         'report_time']))
+                                                                                                         'report_time',
+                                                                                                         'carrier_driver_phone',
+                                                                                                         'carrier_driver_certificate',
+                                                                                                         'carrier_driver_nuclear_acid_time',
+                                                                                                         'carrier_driver_nuclear_acid_result',
+                                                                                                         'carrier_driver_antigen_test_time',
+                                                                                                         'carrier_driver_antigen_test_result',
+                                                                                                         'carrier_driver_temperature',
+                                                                                                         'escort_phone',
+                                                                                                         'escort_driver_certificate',
+                                                                                                         'escort_driver_nuclear_acid_time',
+                                                                                                         'escort_driver_nuclear_acid_result',
+                                                                                                         'escort_driver_antigen_test_time',
+                                                                                                         'escort_driver_antigen_test_result',
+                                                                                                         'escort_driver_temperature',
+                                                                                                         'registrar'
+                                                                                                         ]))
+
 
                 vehicleData['enterExitTime'] = int(time.mktime(vehicleData['enterExitTime'].timetuple()))
                 move_post_body = {

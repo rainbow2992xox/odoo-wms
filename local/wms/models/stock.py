@@ -8,3 +8,5 @@ class Stock(models.Model):
     location_code = fields.Char(string="仓位号", size=128, help="单个仓位号")
     merchandise_id = fields.Integer(string="货品ID", required=True)
     amount = fields.Integer(string="数量", required=True)
+    report_time = fields.Datetime(string="上报时间")
+

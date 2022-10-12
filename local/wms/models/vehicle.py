@@ -22,8 +22,29 @@ class Vehicle(models.Model):
     carrier_driver_name = fields.Char(string="驾驶员姓名", size=32, required=True)
     carrier_driver_idcard = fields.Char(string="驾驶员身份证号", size=32, required=True)
 
+    carrier_driver_phone = fields.Char(string="驾驶员联系电话", size=32, required=True)
+    carrier_driver_certificate = fields.Char(string="驾驶员从业资格证", size=32, required=True)
+    carrier_driver_nuclear_acid_time = fields.Date(string="驾驶员核酸检测时间", required=True)
+    carrier_driver_nuclear_acid_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='驾驶员核酸检测结果',
+                                                          required=True, default='0')
+    carrier_driver_antigen_test_time = fields.Date(string="驾驶员抗原检测时间", required=True)
+    carrier_driver_antigen_test_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='驾驶员抗原检测结果',
+                                                          required=True, default='0')
+    carrier_driver_temperature = fields.Integer(string="驾驶员体温℃", size=32, required=True)
+
     escort = fields.Char(string="押运员姓名", size=32, required=True)
     escort_idcard = fields.Char(string="押运员身份证号", size=32, required=True)
+    escort_phone = fields.Char(string="押运员联系电话", size=32, required=True)
+    escort_driver_certificate = fields.Char(string="押运员从业资格证", size=32, required=True)
+    escort_driver_nuclear_acid_time = fields.Date(string="押运员核酸检测时间", required=True)
+    escort_driver_nuclear_acid_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='押运员核酸检测结果',
+                                                         required=True, default='0')
+    escort_driver_antigen_test_time = fields.Date(string="押运员抗原检测时间", required=True)
+    escort_driver_antigen_test_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='押运员抗原检测结果',
+                                                         required=True, default='0')
+    escort_driver_temperature = fields.Integer(string="押运员体温℃", size=32, required=True)
+
+    registrar = fields.Char(string="登记人员姓名", required=True, size=32)
 
     in_stock_id = fields.One2many(
         'wms.in.stock', 'vehicle_id',
@@ -33,79 +54,9 @@ class Vehicle(models.Model):
         'wms.out.stock', 'vehicle_id',
         string='出库关联ID')
 
-    vehicle_out_id = fields.Integer(string="出厂记录ID")
+    vehicle_out_id = fields.Integer(string="出厂记录ID", default=0)
 
     report_time = fields.Datetime(string="上报时间")
-
-    # def id_check(self, idcard):
-    #     Errors = ['验证通过!', '身份证号码位数不对!', '身份证号码出生日期超出范围或含有非法字符!',
-    #               '身份证号码校验码错误!', '身份证地区非法!']
-    #     area = {"11": "北京", "12": "天津", "13": "河北", "14": "山西", "15": "内蒙古", "21": "辽宁", "22": "吉林",
-    #             "23": "黑龙江",
-    #             "31": "上海", "32": "江苏", "33": "浙江", "34": "安徽", "35": "福建", "36": "江西", "37": "山东",
-    #             "41": "河南", "42": "湖北",
-    #             "43": "湖南", "44": "广东", "45": "广西", "46": "海南", "50": "重庆", "51": "四川", "52": "贵州",
-    #             "53": "云南", "54": "西藏",
-    #             "61": "陕西", "62": "甘肃", "63": "青海", "64": "宁夏", "65": "新疆", "71": "台湾", "81": "香港",
-    #             "82": "澳门", "91": "国外"}
-    #     idcard = str(idcard)
-    #     idcard = idcard.strip()
-    #     idcard_list = list(idcard)
-    #
-    #
-    #     # 15位身份号码检测
-    #     if len(idcard) == 15:
-    #         if ((int(idcard[6:8]) + 1900) % 4 == 0 or (
-    #                 (int(idcard[6:8]) + 1900) % 100 == 0 and (int(idcard[6:8]) + 1900) % 4 == 0)):
-    #             erg = re.compile(
-    #                 '[1-9][0-9]{5}[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}$')  # //测试出生日期的合法性
-    #         else:
-    #             ereg = re.compile(
-    #                 '[1-9][0-9]{5}[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|1[0-9]|2[0-8]))[0-9]{3}$')  # //测试出生日期的合法性
-    #         if re.match(ereg, idcard):
-    #             return (True, "验证通过")
-    #         else:
-    #             return (False, Errors[2])
-    #     # 18位身份号码检测
-    #     elif len(idcard) == 18:
-    #         # 出生日期的合法性检查
-    #         # 闰年月日:((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))
-    #         # 平年月日:((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|1[0-9]|2[0-8]))
-    #         if (int(idcard[6:10]) % 4 == 0 or (int(idcard[6:10]) % 100 == 0 and int(idcard[6:10]) % 4 == 0)):
-    #             # 闰年出生日期的合法性正则表达式
-    #             ereg = re.compile(
-    #                 '[1-9][0-9]{5}19[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[1-2][0-9]))[0-9]{3}[0-9Xx]$')
-    #         else:
-    #             # 平年出生日期的合法性正则表达式
-    #             ereg = re.compile(
-    #                 '[1-9][0-9]{5}19[0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|1[0-9]|2[0-8]))[0-9]{3}[0-9Xx]$')
-    #         # 测试出生日期的合法性
-    #         if re.match(ereg, idcard):
-    #             # 计算校验位
-    #             S = (int(idcard_list[0]) + int(idcard_list[10])) * 7 + (
-    #                     int(idcard_list[1]) + int(idcard_list[11])) * 9 + (
-    #                         int(idcard_list[2]) + int(idcard_list[12])) * 10 + (
-    #                         int(idcard_list[3]) + int(idcard_list[13])) * 5 + (
-    #                         int(idcard_list[4]) + int(idcard_list[14])) * 8 + (
-    #                         int(idcard_list[5]) + int(idcard_list[15])) * 4 + (
-    #                         int(idcard_list[6]) + int(idcard_list[16])) * 2 + int(idcard_list[7]) * 1 + int(
-    #                 idcard_list[8]) * 6 + int(idcard_list[9]) * 3
-    #             Y = S % 11
-    #             M = "F"
-    #             JYM = "10X98765432"
-    #             M = JYM[Y]  # 判断校验位
-    #             if M == idcard_list[17]:  # 检测ID的校验位
-    #                 return (True, "验证通过")
-    #             else:
-    #                 return (False, Errors[3])
-    #         else:
-    #             return (False, Errors[2])
-    #     else:
-    #         return (False, Errors[1])
-    #
-    #     # 地区校验
-    #     if not area[(idcard)[0:2]]:
-    #         return (False, Errors[4])
 
     def id_check(self, id):
         r = requests.get("https://www.haoshudi.com/api/id/query/?userid=" + id)
@@ -156,8 +107,12 @@ class Vehicle(models.Model):
                 "default_carrier_plate_type": select_records.carrier_plate_type,
                 "default_carrier_driver_name": select_records.carrier_driver_name,
                 "default_carrier_driver_idcard": select_records.carrier_driver_idcard,
+                "default_carrier_driver_phone": select_records.carrier_driver_phone,
+                "default_carrier_driver_certificate": select_records.carrier_driver_certificate,
                 "default_escort": select_records.escort,
                 "default_escort_idcard": select_records.escort_idcard,
+                "default_escort_phone": select_records.escort_phone,
+                "default_escort_driver_certificate": select_records.escort_driver_certificate,
                 "default_in_stock_id": None,
                 "default_out_stock_id": None,
                 "default_vehicle_out_id": None,
