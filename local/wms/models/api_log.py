@@ -15,8 +15,8 @@ class ApiLog(models.Model):
     _name = 'wms.api.log'
     api_address = fields.Char('API地址')
     status = fields.Selection([('0', '成功'), ('1', '失败')], string='状态')
-    body = fields.Text(string='请求结果')
-    res = fields.Text(string='返回结果')
+    # body = fields.Text(string='请求结果')
+    # res = fields.Text(string='返回结果')
 
     _sql = {
         "stock": '''SELECT si.FACILITY_ALIAS_ID 仓库号
