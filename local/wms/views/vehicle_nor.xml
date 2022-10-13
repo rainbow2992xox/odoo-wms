@@ -34,7 +34,7 @@
     </record>
 
     <record id="wms_vehicle_nor_view_form_simplified_copy" model="ir.ui.view">
-        <field name="name">wms.vehicle.view.form.simplified.copy</field>
+        <field name="name">wms.vehicle.nor.view.form.simplified.copy</field>
         <field name="model">wms.vehicle.nor</field>
         <field name="arch" type="xml">
             <form create="false">
@@ -77,7 +77,7 @@
     </record>
 
     <record id="wms_vehicle_nor_view_form_simplified2" model="ir.ui.view">
-        <field name="name">wms.vehicle.view.form.simplified</field>
+        <field name="name">wms.vehicle.nor.view.form.simplified</field>
         <field name="model">wms.vehicle.nor</field>
         <field name="arch" type="xml">
             <form create="false" edit="false">
@@ -179,14 +179,14 @@
         </field>
     </record>
 
-    <record id="wms_vehicle_tree_view1" model="ir.actions.act_window.view">
+    <record id="wms_vehicle_nor_tree_view1" model="ir.actions.act_window.view">
         <field eval="1" name="sequence"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="wms_vehicle_nor_view_list"/>
         <field name="act_window_id" ref="wms_vehicle_nor_out_action"/>
     </record>
 
-    <record id="wms_vehicle_form_view2" model="ir.actions.act_window.view">
+    <record id="wms_vehicle_nor_form_view2" model="ir.actions.act_window.view">
         <field eval="2" name="sequence"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="wms_vehicle_nor_view_form_simplified2"/>
