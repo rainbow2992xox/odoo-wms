@@ -7,10 +7,8 @@ import datetime
 import requests
 import json
 import pandas as pd
-import os, sys
+import os
 import time
-
-_logger = logging.getLogger(__name__)
 
 
 class ApiLog(models.Model):

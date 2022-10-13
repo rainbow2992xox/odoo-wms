@@ -11,3 +11,6 @@
 /src/
 /filestore/
 /logs/
+odoo-dev.cfg
+odoo-test.cfg
+odoo.cfg
