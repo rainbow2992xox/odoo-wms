@@ -88,61 +88,6 @@
         </field>
     </record>
 
-    <record id="wms_vehicle_view_form_simplified2" model="ir.ui.view">
-        <field name="name">wms.vehicle.view.form.simplified</field>
-        <field name="model">wms.vehicle</field>
-        <field name="arch" type="xml">
-            <form create="false" edit="false">
-                <sheet>
-                    <group col='6'>
-                        <button name="create_vehicle_out" string="出厂" type="object" class="oe_highlight"
-                                confirm='是否确认该车辆出厂？'/>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </group>
-                    <group col='4' string="车辆信息">
-                        <field name="enter_exit_time" attrs="{'readonly': 1}"/>
-                        <field name="carrier_plate_number" attrs="{'readonly': 1}"/>
-                        <!--                        <field name="enter_exit_type" attrs="{'readonly': 1}"/>-->
-                        <field name="carrier_plate_type" attrs="{'readonly': 1}"/>
-                    </group>
-                    <group string="企业信息">
-                        <field name="carrier_name" attrs="{'readonly': 1}"/>
-                    </group>
-                    <group col='2' string="驾驶员信息">
-                        <field name="carrier_driver_name" attrs="{'readonly': 1}"/>
-                        <field name="carrier_driver_idcard" attrs="{'readonly': 1}"/>
-                        <field name="carrier_driver_phone" attrs="{'readonly': 1}"/>
-                        <field name="carrier_driver_certificate" attrs="{'readonly': 1}"/>
-                        <field name="carrier_driver_nuclear_acid_time" attrs="{'readonly': 1}"/>
-                        <field name="carrier_driver_nuclear_acid_result" attrs="{'readonly': 1}"/>
-                        <field name="carrier_driver_antigen_test_time" attrs="{'readonly': 1}"/>
-                        <field name="carrier_driver_antigen_test_result" attrs="{'readonly': 1}"/>
-                        <field name="carrier_driver_temperature" attrs="{'readonly': 1}"/>
-                    </group>
-
-                    <group col='2' string="押运员信息">
-                        <field name="escort" attrs="{'readonly': 1}"/>
-                        <field name="escort_idcard" attrs="{'readonly': 1}"/>
-                        <field name="escort_phone" attrs="{'readonly': 1}"/>
-                        <field name="escort_driver_certificate" attrs="{'readonly': 1}"/>
-                        <field name="escort_driver_nuclear_acid_time" attrs="{'readonly': 1}"/>
-                        <field name="escort_driver_nuclear_acid_result" attrs="{'readonly': 1}"/>
-                        <field name="escort_driver_antigen_test_time" attrs="{'readonly': 1}"/>
-                        <field name="escort_driver_antigen_test_result" attrs="{'readonly': 1}"/>
-                        <field name="escort_driver_temperature" attrs="{'readonly': 1}"/>
-                    </group>
-
-                    <group col='4' string="登记员信息">
-                        <field name="registrar" attrs="{'readonly': 1}"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
     <record id="wms_vehicle_view_form_simplified" model="ir.ui.view">
         <field name="name">wms.vehicle.view.form.simplified</field>
         <field name="model">wms.vehicle</field>
@@ -230,7 +175,7 @@
     <record id="wms_vehicle_form_view2" model="ir.actions.act_window.view">
         <field eval="2" name="sequence"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="wms_vehicle_view_form_simplified2"/>
+        <field name="view_id" ref="wms_vehicle_view_form_simplified"/>
         <field name="act_window_id" ref="wms_vehicle_out_action"/>
     </record>
 

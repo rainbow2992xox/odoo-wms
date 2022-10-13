@@ -168,8 +168,29 @@ class Vehicle(models.Model):
                     "carrier_plate_type": select_records.carrier_plate_type,
                     "carrier_driver_name": select_records.carrier_driver_name,
                     "carrier_driver_idcard": select_records.carrier_driver_idcard,
+                    "carrier_driver_phone": select_records.carrier_driver_phone,
+                    "carrier_driver_certificate": select_records.carrier_driver_certificate,
+                    "carrier_driver_nuclear_acid_time": select_records.carrier_driver_nuclear_acid_time,
+                    "carrier_driver_nuclear_acid_result": select_records.carrier_driver_nuclear_acid_result,
+
+                    "carrier_driver_antigen_test_time": select_records.carrier_driver_antigen_test_time,
+                    "carrier_driver_antigen_test_result": select_records.carrier_driver_antigen_test_result,
+                    "carrier_driver_temperature": select_records.carrier_driver_temperature,
+
                     "escort": select_records.escort,
                     "escort_idcard": select_records.escort_idcard,
+                    "escort_phone": select_records.escort_phone,
+
+                    "escort_driver_certificate": select_records.escort_driver_certificate,
+                    "escort_driver_nuclear_acid_time": select_records.escort_driver_nuclear_acid_time,
+                    "escort_driver_nuclear_acid_result": select_records.escort_driver_nuclear_acid_result,
+
+                    "escort_driver_antigen_test_time": select_records.escort_driver_antigen_test_time,
+                    "escort_driver_antigen_test_result": select_records.escort_driver_antigen_test_result,
+                    "escort_driver_temperature": select_records.escort_driver_temperature,
+
+                    "registrar": select_records.registrar,
+
                     "in_stock_id": select_records.in_stock_id,
                     "out_stock_id": select_records.out_stock_id,
                     "vehicle_out_id": None,

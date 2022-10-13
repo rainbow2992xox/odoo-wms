@@ -20,7 +20,7 @@
               action="wms_vehicle_nor_out_action"/>
 
 
-    <record id="vehicle_nor_search" model="ir.ui.view">
+    <record id="vehicle_nor_out_search" model="ir.ui.view">
         <field name="name">搜索视图</field>
         <field name="model">wms.vehicle.nor</field>
         <field name="arch" type="xml">
@@ -59,49 +59,6 @@
 
                   <group string="访客信息">
                         <field name="visitors" widget="one2many"  context="{'show_attribute': False}" >
-                            <tree editable="bottom">
-                                <field name="name" />
-                                <field name="phone" />
-                                <field name="idcard" />
-                                <field name="nuclear_acid_time" />
-                                <field name="nuclear_acid_result" />
-                                <field name="antigen_test_time" />
-                                <field name="antigen_test_result" />
-                                <field name="temperature" />
-                            </tree>
-                        </field>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="wms_vehicle_nor_view_form_simplified2" model="ir.ui.view">
-        <field name="name">wms.vehicle.nor.view.form.simplified</field>
-        <field name="model">wms.vehicle.nor</field>
-        <field name="arch" type="xml">
-            <form create="false" edit="false">
-                <sheet>
-                    <group col='6'>
-                        <button name="create_vehicle_out" string="出厂" type="object" class="oe_highlight"
-                                confirm='是否确认该车辆出厂？'/>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <!--                        <button name="open_vehicle_copy_view" string="复制为进厂记录" type="object" class="oe_highlight"/>-->
-                    </group>
-                    <group col='4' string="车辆信息">
-                        <field name="carrier_plate_number" attrs="{'readonly': 1}"/>
-                        <field name="enter_exit_time" attrs="{'readonly': 1}"/>
-                    </group>
-                    <group string="企业信息">
-                        <field name="carrier_name" attrs="{'readonly': 1}"/>
-                        <field name="visit_reason" attrs="{'readonly': 1}"/>
-                    </group>
-
-                    <group string="访客信息">
-                        <field name="visitors" widget="one2many" attrs="{'readonly': 1}" context="{'show_attribute': False}" >
                             <tree editable="bottom">
                                 <field name="name" />
                                 <field name="phone" />
@@ -171,6 +128,7 @@
         <field name="arch" type="xml">
             <tree default_order='enter_exit_time desc'>
                 <field name="enter_exit_time" required="1"/>
+                <field name="enter_exit_type" required="1"/>
                 <field name="carrier_plate_number" required="1"/>
                 <field name="carrier_name" required="1"/>
                 <field name="visit_reason" required="1"/>
@@ -189,7 +147,7 @@
     <record id="wms_vehicle_nor_form_view2" model="ir.actions.act_window.view">
         <field eval="2" name="sequence"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="wms_vehicle_nor_view_form_simplified2"/>
+        <field name="view_id" ref="wms_vehicle_nor_view_form_simplified"/>
         <field name="act_window_id" ref="wms_vehicle_nor_out_action"/>
     </record>
 
