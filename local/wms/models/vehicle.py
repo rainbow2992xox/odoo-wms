@@ -59,13 +59,14 @@ class Vehicle(models.Model):
     report_time = fields.Datetime(string="上报时间")
 
     def id_check(self, id):
-        r = requests.get("https://www.haoshudi.com/api/id/query/?userid=" + id)
-        res = r.json()
-
-        if not res['status']:
-            return (res['status'], res['msg'])
-        else:
-            return (res['data']['isIdCard'], "请核对")
+        # r = requests.get("https://www.haoshudi.com/api/id/query/?userid=" + id)
+        # res = r.json()
+        #
+        # if not res['status']:
+        #     return (res['status'], res['msg'])
+        # else:
+        #     return (res['data']['isIdCard'], "请核对")
+        return (True,"Success")
 
     def plate_number_check(self, plate_number):
         pattern_str = '([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1}(([A-HJ-NP-Z0-9]{5}[DF]{1})|([DF]{1}[A-HJ-NP-Z0-9]{5})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1})'
