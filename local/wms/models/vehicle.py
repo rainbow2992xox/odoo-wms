@@ -58,15 +58,15 @@ class Vehicle(models.Model):
 
     report_time = fields.Datetime(string="上报时间")
 
-    def id_check(self, id):
-        # r = requests.get("https://www.haoshudi.com/api/id/query/?userid=" + id)
-        # res = r.json()
-        #
-        # if not res['status']:
-        #     return (res['status'], res['msg'])
-        # else:
-        #     return (res['data']['isIdCard'], "请核对")
-        return (True,"Success")
+    # def id_check(self, id):
+    #     # r = requests.get("https://www.haoshudi.com/api/id/query/?userid=" + id)
+    #     # res = r.json()
+    #     #
+    #     # if not res['status']:
+    #     #     return (res['status'], res['msg'])
+    #     # else:
+    #     #     return (res['data']['isIdCard'], "请核对")
+    #     return (True,"Success")
 
     def plate_number_check(self, plate_number):
         pattern_str = '([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1}(([A-HJ-NP-Z0-9]{5}[DF]{1})|([DF]{1}[A-HJ-NP-Z0-9]{5})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1})'
@@ -86,11 +86,11 @@ class Vehicle(models.Model):
             if not self.plate_number_check(record.carrier_plate_number):
                 Errors.append("车牌号格式错误")
 
-            if not self.id_check(record.carrier_driver_idcard)[0]:
-                Errors.append("驾驶员身份证号格式错误:%s" % (self.id_check(record.carrier_driver_idcard)[1]))
-
-            if not self.id_check(record.escort_idcard)[0]:
-                Errors.append("押运员身份证号格式错误:%s" % (self.id_check(record.carrier_driver_idcard)[1]))
+            # if not self.id_check(record.carrier_driver_idcard)[0]:
+            #     Errors.append("驾驶员身份证号格式错误:%s" % (self.id_check(record.carrier_driver_idcard)[1]))
+            #
+            # if not self.id_check(record.escort_idcard)[0]:
+            #     Errors.append("押运员身份证号格式错误:%s" % (self.id_check(record.carrier_driver_idcard)[1]))
 
             if record.enter_exit_time and record.enter_exit_time > datetime.datetime.now():
                 Errors.append("出入时间错误")
