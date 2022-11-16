@@ -331,8 +331,13 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
             cursor.execute(self._sql[key])
             result = cursor.fetchall()
 
+            print("result")
+            print(result)
+
             if result:
                 list_result = self._map_list_res(self._trans_res(result, cursor), self._map[key])
+                print("list_result")
+                print(list_result)
 
                 # 补充仓储类型和车辆出入关联ID并插入Odoo库（通过原始ID避免重复插入）
                 for item in list_result:
@@ -341,7 +346,9 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                     item['report_time'] = None
                     in_stock_list = self.env['wms.in.stock'].search([('o_id', '=', item['o_id'])])
                     if len(in_stock_list) == 0:
-                        self.env['wms.in.stock'].create(self._trans_api_to_model_data(item))
+                        res = self.env['wms.in.stock'].create(self._trans_api_to_model_data(item))
+                        print("res")
+                        print(res)
 
                 # 查询所有未绑定车辆出入记录且车牌不为空的入库记录
                 in_stock_list = self.env['wms.in.stock'].search(
@@ -352,6 +359,8 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                     inboundData = self._trans_model_to_api_data(
                         self._trans_record_to_dict(in_stock_record, del_keys=['o_id', 'vehicle_id', 'report_time']))
 
+                    print("inboundData")
+                    print(inboundData)
                     # 相同车牌最近的一次未绑定入库记录的出入记录
                     inbound_time = in_stock_record.inbound_time
                     today = datetime.datetime(inbound_time.year, inbound_time.month, inbound_time.day, 0, 0, 0)
@@ -368,6 +377,11 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
 
                     stock_res = self.env['wms.stock'].search([("merchandise_id", "=", in_stock_record.merchandise_id)])
 
+                    print("vehicle_res")
+                    print(vehicle_res)
+                    print("stock_res")
+                    print(stock_res)
+
                     if len(vehicle_res) > 0 and len(stock_res) > 0:
                         vehicle_data = self._trans_record_to_dict(vehicle_res[0],
                                                                   del_keys=['enter_exit_type', 'vehicle_out_id',
@@ -383,7 +397,14 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         inboundData['inboundTime'] = inboundData['inboundTime'] - datetime.timedelta(hours=8)
                         inboundData['inboundTime'] = int(time.mktime(inboundData['inboundTime'].timetuple()))
 
+                        print("inboundData")
+                        print(inboundData)
+
                         inventoryData = self._trans_model_to_api_data(self._trans_record_to_dict(stock_res[0]))
+
+                        print("inboundData")
+                        print(inboundData)
+
                         move_post_body = {
                             "type": "incresync",
                             "data": {
@@ -392,6 +413,9 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                             },
                             "router": "/report/inbound"
                         }
+
+                        print("move_post_body")
+                        print(move_post_body)
 
                         res = self._post(move_post_body)
 
