@@ -411,7 +411,6 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                             "router": "/report/inbound"
                         }
 
-                        print(move_post_body)
 
                         res = self._post(move_post_body)
 
