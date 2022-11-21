@@ -286,8 +286,8 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                                                    del_keys=['in_stock_id', 'out_stock_id', 'from_amount', 'to_amount',
                                                              'report_time']))
 
-                    # 将datetime格式转时间戳
-                    transferData['transferTime'] = transferData['transferTime'] - datetime.timedelta(hours=8)
+                    # 将datetime格式转时间戳,8x
+                    transferData['transferTime'] = transferData['transferTime']
 
                     # JAVA time*1000
                     transferData['transferTime'] = int(time.mktime(transferData['transferTime'].timetuple())*1000)
@@ -364,8 +364,8 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         ["&",
                          ('carrier_plate_number', '=', in_stock_record.carrier_plate_number),
                          ('enter_exit_type', '=', "0"),
-                         ('enter_exit_time', '>', today - datetime.timedelta(hours=8)),
-                         ('enter_exit_time', '<', inbound_time - datetime.timedelta(hours=8))
+                         ('enter_exit_time', '>', today ),
+                         ('enter_exit_time', '<', inbound_time)
                          ], limit=1, order="enter_exit_time DESC")
 
                     stock_res = self.env['wms.stock'].search([("merchandise_id", "=", in_stock_record.merchandise_id)])
@@ -398,7 +398,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         inboundData = self._trans_model_to_api_data(inboundData)
 
                         # 将datetime格式转时间戳
-                        inboundData['inboundTime'] = inboundData['inboundTime'] - datetime.timedelta(hours=8)
+                        inboundData['inboundTime'] = inboundData['inboundTime']
                         # JAVA time*1000
                         inboundData['inboundTime'] = int(time.mktime(inboundData['inboundTime'].timetuple())*1000)
 
@@ -464,8 +464,8 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         ["&",
                          ('carrier_plate_number', '=', out_stock_record.carrier_plate_number),
                          ('enter_exit_type', '=', "1"),
-                         ('enter_exit_time', '<', tomorrow - datetime.timedelta(hours=8)),
-                         ('enter_exit_time', '>', outbound_time - datetime.timedelta(hours=8))
+                         ('enter_exit_time', '<', tomorrow ),
+                         ('enter_exit_time', '>', outbound_time )
                          ], limit=1, order="enter_exit_time")
 
                     stock_res = self.env['wms.stock'].search([("merchandise_id", "=", out_stock_record.merchandise_id)])
@@ -501,7 +501,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         outboundData["consigneeAddress"] = outboundData["consigneeAddress"][0:15]
 
                         # 将datetime格式转时间戳
-                        outboundData['outboundTime'] = outboundData['outboundTime'] - datetime.timedelta(hours=8)
+                        outboundData['outboundTime'] = outboundData['outboundTime']
                         outboundData['outboundTime'] = int(time.mktime(outboundData['outboundTime'].timetuple())*1000)
 
                         inventoryData = self._trans_model_to_api_data(self._trans_record_to_dict(stock_res[0]))
