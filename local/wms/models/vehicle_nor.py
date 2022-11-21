@@ -97,7 +97,7 @@ class Vehicle(models.Model):
 
                 record = {
                     "carrier_plate_number": select_records.carrier_plate_number,
-                    "enter_exit_time": datetime.datetime.now(pytz.timezone('Asia/Shanghai')),
+                    "enter_exit_time": datetime.datetime.now(),
                     "enter_exit_type": '1',
                     "carrier_name": select_records.carrier_name,
                     "visit_reason": select_records.visit_reason,
