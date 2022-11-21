@@ -93,7 +93,7 @@ class Vehicle(models.Model):
             #     Errors.append("押运员身份证号格式错误:%s" % (self.id_check(record.carrier_driver_idcard)[1]))
             print(record.enter_exit_time)
             print(datetime.datetime.now(pytz.timezone('Asia/Shanghai')))
-            if record.enter_exit_time and record.enter_exit_time > datetime.datetime.now(pytz.timezone('Asia/Shanghai')):
+            if record.enter_exit_time and record.enter_exit_time.replace(tzinfo=pytz.timezone('Asia/Shanghai')) > datetime.datetime.now(pytz.timezone('Asia/Shanghai')):
                 Errors.append("出入时间错误")
 
         if Errors:

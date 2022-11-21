@@ -51,7 +51,7 @@ class Vehicle(models.Model):
 
             print(record.enter_exit_time)
             print(datetime.datetime.now(pytz.timezone('Asia/Shanghai')))
-            if record.enter_exit_time and record.enter_exit_time > datetime.datetime.now(pytz.timezone('Asia/Shanghai')):
+            if record.enter_exit_time and record.enter_exit_time.replace(tzinfo=pytz.timezone('Asia/Shanghai')) > datetime.datetime.now(pytz.timezone('Asia/Shanghai')):
 
                 Errors.append("出入时间错误")
 
