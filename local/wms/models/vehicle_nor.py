@@ -50,6 +50,8 @@ class Vehicle(models.Model):
                 Errors.append("车牌号格式错误")
 
             if record.enter_exit_time and record.enter_exit_time > datetime.datetime.now():
+                print(record.enter_exit_time)
+                print(datetime.datetime.now())
                 Errors.append("出入时间错误")
 
         if Errors:
