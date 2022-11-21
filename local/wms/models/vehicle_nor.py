@@ -49,11 +49,11 @@ class Vehicle(models.Model):
             if not self.plate_number_check(record.carrier_plate_number):
                 Errors.append("车牌号格式错误")
 
-            print(record.enter_exit_time)
-            print(datetime.datetime.now(pytz.timezone('Asia/Shanghai')))
-            if record.enter_exit_time and record.enter_exit_time.replace(tzinfo=pytz.timezone('Asia/Shanghai')) > datetime.datetime.now(pytz.timezone('Asia/Shanghai')):
-
-                Errors.append("出入时间错误")
+            # print(record.enter_exit_time)
+            # print(datetime.datetime.now() + datetime.timedelta(hours=8))
+            # if record.enter_exit_time and record.enter_exit_time > datetime.datetime.now() + datetime.timedelta(hours=8):
+            #
+            #     Errors.append("出入时间错误")
 
         if Errors:
             raise models.ValidationError('\n'.join(Errors))
@@ -62,7 +62,7 @@ class Vehicle(models.Model):
         for select_records in self:
             record = {
                 "default_carrier_plate_number": select_records.carrier_plate_number,
-                "default_enter_exit_time": datetime.datetime.now(pytz.timezone('Asia/Shanghai')),
+                "default_enter_exit_time": datetime.datetime.now() + datetime.timedelta(hours=8),
                 "default_enter_exit_type": '0',
                 "default_carrier_name": select_records.carrier_name,
                 "default_visit_reason": select_records.visit_reason,
