@@ -9,7 +9,7 @@ import json
 import pandas as pd
 import os
 import time
-
+import pytz
 
 class ApiLog(models.Model):
     _name = 'wms.api.log'
@@ -328,7 +328,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                                  })
                     if res["success"]:
                         # 插入成功后更新移库表上报时间
-                        move_stock_record.write({"report_time": datetime.datetime.now()})
+                        move_stock_record.write({"report_time": datetime.datetime.now(pytz.timezone('Asia/Shanghai'))})
         elif key == "in_stock":
             cursor.execute(self._sql[key])
             result = cursor.fetchall()
@@ -427,7 +427,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         if res["success"]:
                             # 插入成功后更新入库表关联出入记录ID
                             in_stock_record.write(
-                                {"vehicle_id": vehicle_res[0].id, "report_time": datetime.datetime.now()})
+                                {"vehicle_id": vehicle_res[0].id, "report_time": datetime.datetime.now(pytz.timezone('Asia/Shanghai'))})
         elif key == "out_stock":
             cursor.execute(self._sql[key])
             result = cursor.fetchall()
@@ -526,7 +526,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         if res["success"]:
                             # 插入成功后更新出库表关联出入记录ID和上报时间
                             out_stock_record.write(
-                                {"vehicle_id": vehicle_res[0].id, "report_time": datetime.datetime.now()})
+                                {"vehicle_id": vehicle_res[0].id, "report_time": datetime.datetime.now(pytz.timezone('Asia/Shanghai'))})
         elif key == "stock":
             cursor.execute(self._sql[key])
             result = cursor.fetchall()
@@ -539,7 +539,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                     res = self.env['wms.merchandise'].search([('merchandise_id', '=', item['merchandiseId'])])
                     if len(res) > 0:
                         record = self._trans_api_to_model_data(item)
-                        record["report_time"] = datetime.datetime.now()
+                        record["report_time"] = datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
                         self.env['wms.stock'].create(self._trans_api_to_model_data(item))
                         body_list.append(item)
 
@@ -683,7 +683,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
 
                 if res["success"]:
                     # 插入成功后更新出入记录上报时间
-                    record.write({"report_time": datetime.datetime.now()})
+                    record.write({"report_time": datetime.datetime.now(pytz.timezone('Asia/Shanghai'))})
 
         # 插入日志
         for log in logs:

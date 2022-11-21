@@ -4,7 +4,7 @@ from odoo import models, fields
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 import requests
-
+import pytz
 
 class Vehicle(models.Model):
     _name = "wms.vehicle"
@@ -91,10 +91,9 @@ class Vehicle(models.Model):
             #
             # if not self.id_check(record.escort_idcard)[0]:
             #     Errors.append("押运员身份证号格式错误:%s" % (self.id_check(record.carrier_driver_idcard)[1]))
-
-            if record.enter_exit_time and record.enter_exit_time > datetime.datetime.now():
-                print(record.enter_exit_time )
-                print(datetime.datetime.now())
+            print(record.enter_exit_time)
+            print(datetime.datetime.now(pytz.timezone('Asia/Shanghai')))
+            if record.enter_exit_time and record.enter_exit_time > datetime.datetime.now(pytz.timezone('Asia/Shanghai')):
                 Errors.append("出入时间错误")
 
         if Errors:
@@ -104,7 +103,7 @@ class Vehicle(models.Model):
         for select_records in self:
             record = {
                 "default_carrier_plate_number": select_records.carrier_plate_number,
-                "default_enter_exit_time": datetime.datetime.now(),
+                "default_enter_exit_time": datetime.datetime.now(pytz.timezone('Asia/Shanghai')),
                 "default_enter_exit_type": '0',
                 "default_carrier_name": select_records.carrier_name,
                 "default_carrier_plate_type": select_records.carrier_plate_type,
@@ -162,7 +161,7 @@ class Vehicle(models.Model):
     def create_vehicle_out(self):
         for select_records in self:
             if select_records.vehicle_out_id == 0 and select_records.enter_exit_type == '0':
-                enter_exit_time = datetime.datetime.now()
+                enter_exit_time = datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
                 record = {
                     "carrier_plate_number": select_records.carrier_plate_number,
                     "enter_exit_time": enter_exit_time,
