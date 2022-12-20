@@ -19,94 +19,67 @@ class ApiLog(models.Model):
     res = fields.Text(string='返回结果')
 
     _sql = {
-        "stock": '''SELECT si.FACILITY_ALIAS_ID 仓库号
-              ,si.LOCN_AREA 仓间号
-              ,si.LOCN_BRCD 仓位号
-              ,si.ITEM_ID 货品ID
-              ,si.ITEM_NAME 商品编码
-              ,sum(si.ON_HAND_QTY) 数量
-              FROM SEND_INVNTORY_LIST_TO_GOV si WHERE si.FACILITY_ALIAS_ID='HS01' AND si.COMPANY_CODE ='SCRC' --AND si.ITEM_NAME='10000218'
-              AND si.LOCN_AREA in(4,5，6，8，11，12，13，17，18，19，20，21，22，23，24，25，26，27，28，29，30，31，32，33)
-              AND TO_CHAR(si.INVN_DATE, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
-              GROUP  BY si.FACILITY_ALIAS_ID
-                        ,si.LOCN_AREA
-                        ,si.LOCN_BRCD
-                        ,si.ITEM_ID
-                        ,si.ITEM_NAME
-              ORDER BY si.LOCN_AREA
-                      ,si.LOCN_BRCD
-                      ,si.ITEM_NAME''',
-        "in_stock": '''SELECT sr.RECV_DATE_TIME 入库时间
-      ,sr.FACILITY_ALIAS_ID 入库仓库号
-      ,sr.LOCN_AREA  入库仓间号
-      ,sr.LOCN_BRCD  入库仓位号
-      ,sr.ITEM_ID 货品ID
-      ,sr.ITEM_NAME  商品编码
-      ,sr.BATCH_NBR  生产批次号
-      ,sr.ON_HAND_QTY  数量
-      ,sr.DIRECTION 业务描述
-      ,sr.car_nbr   送货车号
-      ,sr.id 入库ID
-      FROM SEND_RECV_LIST_TO_GOV sr
-      WHERE sr.COMPANY_CODE ='SCRC' AND sr.FACILITY_ALIAS_ID ='HS01'AND sr.DIRECTION IN ('入库上架')
-   --   AND sr.LOCN_AREA in(4,5，6，8，11，12，13，17，18，19，20，21，22，23，24，25，26，27，28，29，30，31，32，33)
-      AND TO_CHAR(sr.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
-      ORDER BY sr.RECV_DATE_TIME''',
-        "out_stock": '''SELECT sd.DO_DATE_TIME 出库时间
-      ,sd.FACILITY_ALIAS_ID 出库仓库号
-      ,sd.LOCN_AREA  出库仓间号
-      ,sd.LOCN_BRCD  出库仓位号
-      ,sd.ITEM_ID 货品ID
-      ,sd.ITEM_NAME  商品编码
-      ,sd.BATCH_NBR  生产批次号
-      ,sd.ON_HAND_QTY  数量
-      ,sd.CUSTOMER_NAME 收货方名称
-      ,sd.CUSTOMER_ADDR 收货方地址
-      ,sd.DIRECTION 业务描述
-      ,sd.id 出库ID
-      --,sd.*
-      --,vb.CARRIERNAME AS 运输公司名称
-      ,case when vb.TRANSMETHOD ='自车' then '国药试剂' else vb.CARRIERNAME end as 运输公司名称
-      --,vb.GOODSCLASSNAME AS 运输车辆类型
-      ,case when vb.GOODSCLASSNAME IS NOT NULL THEN '3' else vb.GOODSCLASSNAME end as 运输车辆类型
-      ,vb.LICENSENO AS 车牌号
-      ,vb.DRIVERNAME AS 驾驶员
-      ,vb.DRIVERIDCARDNO AS 驾驶员身份证
-      ,vb.SUPERCARGONAME AS 押运员
-      ,vb.SUPERCARGOIDCARDNO AS 押运员身份证
-      ,vb.TALLYNO AS 状态
-      --,vb.*
-      FROM SEND_DO_LIST_TO_GOV sd
-      LEFT JOIN v_boxno_follow@link_tms vb ON sd.CASE_NBR =vb.boxno
-      WHERE sd.COMPANY_CODE ='SCRC' AND sd.FACILITY_ALIAS_ID ='HS01'AND sd.DIRECTION IN ('原箱出库','拼箱出库')
-      --AND sd.LOCN_AREA in(4,5，6，8，11，12，13，17，18，19，20，21，22，23，24，25，26，27，28，29，30，31，32，33)
-      AND TO_CHAR(sd.DO_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
-      ORDER BY sd.DO_DATE_TIME
-      ''',
-        "move_stock": '''select sr.RECV_DATE_TIME as 移库时间,     sd.FACILITY_ALIAS_ID as 移出仓库号,   sd.LOCN_AREA as 移出仓间号,        sd.LOCN_BRCD as 移出仓位号,
-       sd.id   as 出库ID,                 sr.FACILITY_ALIAS_ID as 目标仓库号,   sr.LOCN_AREA as 目标仓间号,        sr.LOCN_BRCD as 目标仓位号,
-       sr.id    as 入库ID,                sr.ITEM_ID AS 货品ID,                 sr.ITEM_NAME as 货品编码,          sr.BATCH_NBR as 生产批次号,
-       sr.on_hand_qty as 数量,            sd.inventory_qty as 移出货位结存,     sr.inventory_qty as 移入货位结存， sr.direction as 业务描述
-from send_recv_list_to_gov sr inner join  send_do_list_to_gov sd
-on ( sd.direction = sr.direction and sd.LPN_ID = sr.LPN_ID)
-where sr.direction ='库内移动' AND sd.FACILITY_ALIAS_ID='HS01'
---AND sd.LOCN_AREA in(4,5，6，8，11，12，13，17，18，19，20，21，22，23，24，25，26，27，28，29，30，31，32，33)
-AND TO_CHAR(sr.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
-union
-select  D.RECV_DATE_TIME as 移库时间,    sd.FACILITY_ALIAS_ID  as 移出仓库号,    sd.LOCN_AREA as 移出仓间号,         sd.LOCN_BRCD as 移出仓位号,
-        sd.id as 出库ID,                 D.wh as 目标仓库号,                      D.LOCN_AREA as 目标仓间号,         D.LOCN_BRCD as 目标仓位号,
-        D.id as 入库ID,                  sd.ITEM_ID AS 货品ID,                    sd.ITEM_NAME as 货品编码,          sd.BATCH_NBR as 生产批次号,
-        sd.on_hand_qty as 数量,          sd.inventory_qty as 移出货位结存,     D.inventory_qty as 移入货位结存，    sd.direction as 业务描述
-from send_do_list_to_gov sd  inner join
-    (select  sr.RECV_DATE_TIME, sr.FACILITY_ALIAS_ID as wh,sr.LOCN_AREA,sr.LOCN_BRCD,sr.lpn_id,sr.id,t.source_lpn_id,t.direction,sr.inventory_qty
-     from send_recv_list_to_gov sr inner join
-         (select sr1.lpn_id,sr1.source_lpn_id,sr1.direction from send_recv_list_to_gov sr1 where sr1.direction ='库内下架' ) T
-     on t.lpn_id = sr.lpn_id where sr.direction = '库内上架' and t.direction ='库内下架' ) D
-on D.source_lpn_id = sd.lpn_id
-WHERE sd.FACILITY_ALIAS_ID='HS01'
---AND sd.LOCN_AREA in(4,5，6，8，11，12，13，17，18，19，20，21，22，23，24，25，26，27，28，29，30，31，32，33)
-AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
-        '''
+        "stock": '''SELECT ss.ckh        仓库号
+          ,ss.cjh        仓间号
+          ,ss.cwh        仓位号
+          ,ss.hpid       货品ID
+          ,ss.spbm       商品编码
+          ,ss.sl         数量
+    FROM SEND_STOCK ss''',
+        "in_stock": '''SELECT si.rksj     入库时间
+          ,si.ckh_in   入库仓库号
+          ,si.cjh_in   入库仓间号
+          ,si.cwh_in   入库仓位号
+          ,si.hpid     货品ID
+          ,si.spbm     商品编码
+          ,si.ph       生产批次号
+          ,si.sl       数量
+          ,si.cph      送货车号
+          ,si.ywms     业务描述
+          ,si.id       入库ID
+    FROM SEND_IN si 
+    WHERE TO_CHAR(si.rksj, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')''',
+        "out_stock": '''SELECT so.cksj       出库时间
+          ,so.ckh_out    出库仓库号
+          ,so.cjh_out    出库仓间号
+          ,so.cwh_out    出库仓位号
+          ,so.hpid       货品ID
+          ,so.spbm       商品编码
+          ,so.ph         生产批次号
+          ,so.sl         数量
+          ,so.shfmc      收货方名称
+          ,so.shfdz      收货方地址
+          ,so.ywms       业务描述
+          ,so.ysgs       运输公司名称
+          ,so.cllx       运输车辆类型
+          ,so.cph        车牌号
+          ,so.jsy        驾驶员
+          ,so.jsz        驾驶员身份证
+          ,so.yyy        押运员
+          ,so.yyz        押运员身份证
+          ,so.zt         状态
+          ,so.id         出库ID
+    FROM SEND_OUT so
+    WHERE TO_CHAR(so.cksj, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD') ''',
+        "move_stock": '''SELECT sm.yksj          移库时间
+          ,sm.ckh_out       移出仓库号
+          ,sm.cjh_out       移出仓间号
+          ,sm.cwh_out       移出仓位号
+          ,sm.id_out        出库ID
+          ,sm.ckh_in        目标仓库号
+          ,sm.cjh_in        目标仓间号
+          ,sm.cwh_in        目标仓位号
+          ,sm.id_in         入库ID
+          ,sm.hpid          货品ID 
+          ,sm.spbm          商品编码
+          ,sm.ph            生产批次号
+          ,sm.sl            数量
+          ,sm.ycjc          移出货位结存
+          ,sm.yrjc          移入货位结存
+          ,sm.ywms          业务描述                          
+    FROM SEND_MOVE sm
+    WHERE TO_CHAR(sm.yksj, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
+            '''
     }
     _map = {
         "stock": {
@@ -165,7 +138,8 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
             "仓间面积（㎡）": "acreage",
             "仓间最大存储量（吨）": "maxVolume",
             "消防措施": "fireFightingMeasures",
-            "仓间储存危险化学品危险性类别": "riskGhsCategory"
+            "仓间储存危险化学品危险性类别": "riskGhsCategory",
+            "危险货物类别": "riskItemCategory"
         },
         "merchandise": {"货品ID": "merchandiseId",
                         "货品名称": "merchandiseName",
@@ -173,6 +147,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         "货主名称": "ownerName",
                         "货品存储空间类型": "warehouseType",
                         "是否为混合物": "isMixture",
+                        "2828目录序号": "chemicalSerial",
                         "危险化学品名": "chemicalName",
                         "成分": "mixChemicleName",
                         "物理状态": "physicalState",
@@ -184,6 +159,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                         "火灾危险性类别": "fireRisk",
                         "化学结构": "organic",
                         "剧毒品特性": "deleterious",
+                        "酸碱性": "acidBase",
                         "监控化学品（禁化武）特性": "monitored",
                         "特别管控危险化学品特性": "specialControlled",
                         "重点监管危险化学品特性": "regulatory",
@@ -392,10 +368,14 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                                                                             'escort_driver_temperature',
                                                                             'registrar'
                                                                             ])
+
                         # 出入库承运车辆性质和车辆出入记录定义不同
                         vehicle_data['carrierPlateType'] = '3'
                         inboundData.update(vehicle_data)
                         inboundData = self._trans_model_to_api_data(inboundData)
+
+                        # will_bill_code
+                        inboundData['wayBillCode'] = inboundData['wayBillCode'].replace(" ", "")
 
                         # 将datetime格式转时间戳
                         inboundData['inboundTime'] = inboundData['inboundTime']
@@ -492,10 +472,16 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                                                                             'registrar'
                                                                             ])
 
+
+
+
                         # 出入库承运车辆性质和车辆出入记录定义不同
                         vehicle_data['carrierPlateType'] = '3'
                         outboundData.update(vehicle_data)
                         outboundData = self._trans_model_to_api_data(outboundData)
+
+                        # will_bill_code
+                        outboundData['wayBillCode'] = outboundData['wayBillCode'].replace(" ", "")
 
                         # 出库收货地址暂时截取16位
                         outboundData["consigneeAddress"] = outboundData["consigneeAddress"][0:15]
@@ -587,7 +573,7 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                          "res": res
                          })
         elif key == "merchandise":
-            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", dtype={"危险货物类别": str})
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx",sheet_name="wms_merchandise", dtype={"危险货物类别": str})
             # df = pd.read_excel("/home/rainbow/Documents/odoo-wms/local/wms/data/merchandise_file.xlsx",
             #                    dtype={"危险货物类别": str})
             new_cols = []
@@ -664,7 +650,8 @@ AND TO_CHAR(D.RECV_DATE_TIME, 'YYYY-MM-DD')=TO_CHAR(SYSDATE,'YYYY-MM-DD')
                                                                                                          'escort_driver_antigen_test_time',
                                                                                                          'escort_driver_antigen_test_result',
                                                                                                          'escort_driver_temperature',
-                                                                                                         'registrar'
+                                                                                                         'registrar',
+                                                                                                         'way_bill_code'
                                                                                                          ]))
                 # JAVA time*1000
                 vehicleData['enterExitTime'] = int(time.mktime(vehicleData['enterExitTime'].timetuple())*1000)

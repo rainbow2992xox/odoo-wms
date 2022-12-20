@@ -46,6 +46,8 @@ class Vehicle(models.Model):
 
     registrar = fields.Char(string="登记人员姓名", required=True, size=32)
 
+    way_bill_code = fields.Char(string="电子运单号", required=True, size=128, default='0000 0000 0000 0000 0000 0000')
+
     in_stock_id = fields.One2many(
         'wms.in.stock', 'vehicle_id',
         string='入库关联ID')
@@ -98,6 +100,8 @@ class Vehicle(models.Model):
         if Errors:
             raise models.ValidationError('\n'.join(Errors))
 
+
+
     def open_vehicle_copy_view(self):
         for select_records in self:
             record = {
@@ -114,6 +118,7 @@ class Vehicle(models.Model):
                 "default_escort_idcard": select_records.escort_idcard,
                 "default_escort_phone": select_records.escort_phone,
                 "default_escort_driver_certificate": select_records.escort_driver_certificate,
+                "default_way_bill_code": select_records.way_bill_code,
                 "default_in_stock_id": None,
                 "default_out_stock_id": None,
                 "default_vehicle_out_id": None,
@@ -191,6 +196,8 @@ class Vehicle(models.Model):
                     "escort_driver_temperature": select_records.escort_driver_temperature,
 
                     "registrar": select_records.registrar,
+
+                    "way_bill_code":select_records.way_bill_code,
 
                     "in_stock_id": select_records.in_stock_id,
                     "out_stock_id": select_records.out_stock_id,
