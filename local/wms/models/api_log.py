@@ -204,9 +204,14 @@ class ApiLog(models.Model):
         return new_list
 
     def _post(self, body):
-        res = requests.request("POST", "http://10.3.0.150:7673/java/sync", headers={"content-type": "application/json",
+        # res = requests.request("POST", "http://10.3.0.150:7673/java/sync", headers={"content-type": "application/json",
+        #                                                                             "charset": "utf-8"},
+        #                        data=json.dumps(body))
+
+        res = requests.request("POST", "http://10.3.0.150:7674/java/sync", headers={"content-type": "application/json",
                                                                                     "charset": "utf-8"},
                                data=json.dumps(body))
+
         return res.json()
 
     def _trans_api_to_model_data(self, body):
@@ -595,18 +600,19 @@ class ApiLog(models.Model):
             for item in merchandise_dict_list:
                 self.env['wms.merchandise'].create(self._trans_api_to_model_data(item))
 
-            # move_post_body = {
-            #     "type": "fullsync",
-            #     "data": {"merchandiseData": merchandise_dict_list},
-            #     "router": "/sync/data/merchandiseSync"
-            # }
-            #
-            # res = self._post(move_post_body)
-            # logs.append({"api_address": move_post_body["router"],
-            #              "status": '0' if res["success"] else '1',
-            #              "body": "",
-            #              "res": res
-            #              })
+            move_post_body = {
+                "type": "fullsync",
+                "data": {"merchandiseData": merchandise_dict_list},
+                "router": "/sync/data/merchandiseSync"
+            }
+
+            res = self._post(move_post_body)
+            logs.append({"api_address": move_post_body["router"],
+                         "status": '0' if res["success"] else '1',
+                         "body": "",
+                         "res": res
+                         })
+
         elif key == "merchandise_files":
             df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx",sheet_name="wms_merchandise", dtype={"危险货物类别": str})
             code_list = list(set(df['CAS索引号']))
