@@ -11,6 +11,8 @@ class Merchandise(models.Model):
     warehouse_type = fields.Integer(string="货品存储空间类型",required=True , help="0:储罐，1：仓库")
     # 单选
     is_mixture = fields.Integer(string="是否为混合物", required=True, help="0:否，1：是")
+    chemical_serial = fields.Integer(string="2828目录序号", required=True)
+
     chemical_name = fields.Char(string="危险化学品名", size=128, required=True)
     # 多选 代号英文逗号隔开
     mix_chemicle_name = fields.Char(string="成分", size=128, help="成分化学品名最少1个，最多5个")
@@ -48,6 +50,10 @@ class Merchandise(models.Model):
     organic = fields.Integer(string="化学结构", required=True, help="0:无机，1：有机")
     # 单选
     deleterious = fields.Integer(string="剧毒品特性", required=True, help="0:否，1：是")
+
+    # 单选
+    acid_base = fields.Integer(string="酸碱性", help="0：酸性，1:碱性")
+
     # 单选
     monitored = fields.Integer(string="监控化学品（禁化武）特性", help="0:否，1：是")
     # 单选
