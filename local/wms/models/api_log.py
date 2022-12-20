@@ -578,7 +578,7 @@ class ApiLog(models.Model):
                          "res": res
                          })
         elif key == "merchandise":
-            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_one_file.xlsx",sheet_name="wms_merchandise", dtype={"危险货物类别": str})
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx",sheet_name="wms_merchandise", dtype={"危险货物类别": str})
             # df = pd.read_excel("/home/rainbow/Documents/odoo-wms/local/wms/data/merchandise_file.xlsx",
             #                    dtype={"危险货物类别": str})
             new_cols = []
