@@ -608,7 +608,7 @@ class ApiLog(models.Model):
             #              "res": res
             #              })
         elif key == "merchandise_files":
-            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx", dtype={"危险货物类别": str})
+            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise.xlsx",sheet_name="wms_merchandise", dtype={"危险货物类别": str})
             code_list = list(set(df['CAS索引号']))
             for code in code_list:
                 # '/home/reagent/opt/sdspdf'
