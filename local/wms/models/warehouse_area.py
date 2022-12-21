@@ -21,5 +21,7 @@ class WarehouseArea(models.Model):
     risk_ghs_category = fields.Char(string="仓间储存危险化学品危险性类别（GHS）", size=128,
                                 help="1爆炸物；2易燃气体；3易燃气溶胶；4氧化性气体；5高压气体；6易燃液体；7易燃固体；")
 
+    risk_item_category = fields.Char(string="危险货物类别", size=128)
+
 
 
