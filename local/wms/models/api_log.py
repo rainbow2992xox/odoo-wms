@@ -204,13 +204,13 @@ class ApiLog(models.Model):
         return new_list
 
     def _post(self, body):
-        # res = requests.request("POST", "http://10.3.0.150:7673/java/sync", headers={"content-type": "application/json",
-        #                                                                             "charset": "utf-8"},
-        #                        data=json.dumps(body))
-
-        res = requests.request("POST", "http://10.3.0.150:7674/java/sync", headers={"content-type": "application/json",
+        res = requests.request("POST", "http://10.3.0.150:7673/java/sync", headers={"content-type": "application/json",
                                                                                     "charset": "utf-8"},
                                data=json.dumps(body))
+
+        # res = requests.request("POST", "http://10.3.0.150:7674/java/sync", headers={"content-type": "application/json",
+        #                                                                             "charset": "utf-8"},
+        #                        data=json.dumps(body))
 
         return res.json()
 
