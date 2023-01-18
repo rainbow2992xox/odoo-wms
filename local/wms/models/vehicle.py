@@ -24,25 +24,21 @@ class Vehicle(models.Model):
 
     carrier_driver_phone = fields.Char(string="驾驶员联系电话", size=32, required=True)
     carrier_driver_certificate = fields.Char(string="驾驶员从业资格证", size=32, required=True)
-    carrier_driver_nuclear_acid_time = fields.Date(string="驾驶员核酸检测时间", required=True)
-    carrier_driver_nuclear_acid_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='驾驶员核酸检测结果',
-                                                          required=True, default='0')
-    carrier_driver_antigen_test_time = fields.Date(string="驾驶员抗原检测时间", required=True)
-    carrier_driver_antigen_test_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='驾驶员抗原检测结果',
-                                                          required=True, default='0')
-    carrier_driver_temperature = fields.Integer(string="驾驶员体温℃", size=32, required=True)
+    carrier_driver_nuclear_acid_time = fields.Date(string="驾驶员核酸检测时间")
+    carrier_driver_nuclear_acid_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='驾驶员核酸检测结果')
+    carrier_driver_antigen_test_time = fields.Date(string="驾驶员抗原检测时间")
+    carrier_driver_antigen_test_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='驾驶员抗原检测结果')
+    carrier_driver_temperature = fields.Integer(string="驾驶员体温℃", size=32)
 
     escort = fields.Char(string="押运员姓名", size=32, required=True)
     escort_idcard = fields.Char(string="押运员身份证号", size=32, required=True)
     escort_phone = fields.Char(string="押运员联系电话", size=32, required=True)
     escort_driver_certificate = fields.Char(string="押运员从业资格证", size=32, required=True)
-    escort_driver_nuclear_acid_time = fields.Date(string="押运员核酸检测时间", required=True)
-    escort_driver_nuclear_acid_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='押运员核酸检测结果',
-                                                         required=True, default='0')
-    escort_driver_antigen_test_time = fields.Date(string="押运员抗原检测时间", required=True)
-    escort_driver_antigen_test_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='押运员抗原检测结果',
-                                                         required=True, default='0')
-    escort_driver_temperature = fields.Integer(string="押运员体温℃", size=32, required=True)
+    escort_driver_nuclear_acid_time = fields.Date(string="押运员核酸检测时间")
+    escort_driver_nuclear_acid_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='押运员核酸检测结果')
+    escort_driver_antigen_test_time = fields.Date(string="押运员抗原检测时间")
+    escort_driver_antigen_test_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='押运员抗原检测结果')
+    escort_driver_temperature = fields.Integer(string="押运员体温℃", size=32)
 
     registrar = fields.Char(string="登记人员姓名", required=True, size=32)
 
