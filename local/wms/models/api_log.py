@@ -17,6 +17,15 @@ class ApiLog(models.Model):
     status = fields.Selection([('0', '成功'), ('1', '失败')], string='状态')
     body = fields.Text(string='请求结果')
     res = fields.Text(string='返回结果')
+    call_time = fields.Datetime(
+        string="调用时间"
+    )
+
+    @api.model
+    def create(self, vals):
+        vals['call_time'] = datetime.datetime.now() + datetime.timedelta(hours=8)
+        res = super(ApiLog,self).create(vals)
+        return res
 
     _sql = {
         "stock": '''SELECT ss.ckh        仓库号
@@ -612,7 +621,6 @@ class ApiLog(models.Model):
                          "body": "",
                          "res": res
                          })
-
         elif key == "merchandise_files":
             df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", dtype={"危险货物类别": str})
             code_list = list(set(df['CAS索引号']))
