@@ -685,7 +685,10 @@ class ApiLog(models.Model):
                 if res["success"]:
                     # 插入成功后更新出入记录上报时间
                     record.write({"report_time": datetime.datetime.now() + datetime.timedelta(hours=8)})
-
+        elif key == "clean":
+            res = self.env["wms.api.log"].search([])
+            for i in res:
+                i.write({"call_time":i["create_date"]+datetime.timedelta(hours=8)})
         # 插入日志
         for log in logs:
             record = self.env['wms.api.log'].create(log)
