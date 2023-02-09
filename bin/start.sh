@@ -1,6 +1,6 @@
 #!/bin/sh
 ROOT=$(dirname $0)/..
-PYTHON=$ROOT/env/bin/python3
+PYTHON=/root/anaconda3/bin/python
 ODOO=$ROOT/src/odoo/odoo-bin
-$PYTHON $ODOO -c $ROOT/odoo.cfg "$@"
+$PYTHON $ODOO -c $ROOT/odoo-pro.cfg --update=wms "$@"
 exit $?

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='wms_vehicle_action' model='ir.actions.act_window'>
+        <field name="name">车辆出入记录</field>
+        <field name="res_model">wms.vehicle</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id='wms_vehicle_out_action' model='ir.actions.act_window'>
+        <field name="name">危险品车辆出厂</field>
+        <field name="res_model">wms.vehicle</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_out':1}</field>
+    </record>
+
+    <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
+    <menuitem name="危险品车辆出入记录" id="wms_vehicle_menu" parent="wms_base_menu" action="wms_vehicle_action"/>
+    <menuitem name="危险品车辆出厂" id="wms_vehicle_out_menu" parent="wms_base_menu" action="wms_vehicle_out_action"/>
+
+
+    <record id="vehicle_search" model="ir.ui.view">
+        <field name="name">搜索视图</field>
+        <field name="model">wms.vehicle</field>
+        <field name="arch" type="xml">
+            <search string="车牌号搜索">
+                <filter name="out" string="未出厂车辆"
+                        domain="  [('enter_exit_type', '=', '0'), ('vehicle_out_id', '=', 0)]"/>
+                <field name="carrier_plate_number" string="车牌号"
+                       filter_domain="[('carrier_plate_number','ilike',self)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="wms_vehicle_view_form_simplified_copy" model="ir.ui.view">
+        <field name="name">wms.vehicle.view.form.simplified.copy</field>
+        <field name="model">wms.vehicle</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <footer>
+                    <xpath expr="//button[@class='o_form_button_save']" position="attribute">
+                        <attribute name="invisible"/>
+                    </xpath>
+                </footer>
+                <sheet>
+                    <group>
+                        <button name="copy_vehicle_in" string="复制" type="object" class="oe_highlight"
+                                confirm='是否确认复制？'/>
+                    </group>
+                    <group col='4' string="车辆信息">
+                        <field name="enter_exit_time"/>
+                        <field name="carrier_plate_number"/>
+                        <field name="enter_exit_type"/>
+                        <field name="carrier_plate_type"/>
+                    </group>
+                    <group string="企业信息">
+                        <field name="carrier_name"/>
+                    </group>
+                    <group col='2' string="驾驶员信息">
+                        <field name="carrier_driver_name"/>
+                        <field name="carrier_driver_idcard"/>
+                        <field name="carrier_driver_phone"/>
+                        <field name="carrier_driver_certificate"/>
+                        <field name="carrier_driver_nuclear_acid_time"/>
+                        <field name="carrier_driver_nuclear_acid_result"/>
+                        <field name="carrier_driver_antigen_test_time"/>
+                        <field name="carrier_driver_antigen_test_result"/>
+                        <field name="carrier_driver_temperature"/>
+                    </group>
+
+                    <group col='2' string="押运员信息">
+                        <field name="escort"/>
+                        <field name="escort_idcard"/>
+                        <field name="escort_phone"/>
+                        <field name="escort_driver_certificate"/>
+                        <field name="escort_driver_nuclear_acid_time"/>
+                        <field name="escort_driver_nuclear_acid_result"/>
+                        <field name="escort_driver_antigen_test_time"/>
+                        <field name="escort_driver_antigen_test_result"/>
+                        <field name="escort_driver_temperature"/>
+                    </group>
+
+                    <group col='4' string="登记员信息">
+                        <field name="registrar"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="wms_vehicle_view_form_simplified" model="ir.ui.view">
+        <field name="name">wms.vehicle.view.form.simplified</field>
+        <field name="model">wms.vehicle</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group col='6'>
+                        <button name="create_vehicle_out" string="出厂" type="object" class="oe_highlight"
+                                confirm='是否确认该车辆出厂？'/>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <button name="open_vehicle_copy_view" string="复制为进厂记录" type="object"
+                                class="oe_highlight"/>
+                    </group>
+                    <group col='4' string="车辆信息">
+                        <field name="enter_exit_time" required="1"/>
+                        <field name="carrier_plate_number" required="1"/>
+                        <field name="enter_exit_type" required="1"/>
+                        <field name="carrier_plate_type" required="1"/>
+                    </group>
+                    <group string="企业信息">
+                        <field name="carrier_name" required="1"/>
+                    </group>
+                    <group col='4' string="驾驶员信息">
+                        <field name="carrier_driver_name"/>
+                        <field name="carrier_driver_idcard"/>
+                        <field name="carrier_driver_phone"/>
+                        <field name="carrier_driver_certificate"/>
+                        <field name="carrier_driver_nuclear_acid_time"/>
+                        <field name="carrier_driver_nuclear_acid_result"/>
+                        <field name="carrier_driver_antigen_test_time"/>
+                        <field name="carrier_driver_antigen_test_result"/>
+                        <field name="carrier_driver_temperature"/>
+                    </group>
+
+                    <group col='4' string="押运员信息">
+                        <field name="escort"/>
+                        <field name="escort_idcard"/>
+                        <field name="escort_phone"/>
+                        <field name="escort_driver_certificate"/>
+                        <field name="escort_driver_nuclear_acid_time"/>
+                        <field name="escort_driver_nuclear_acid_result"/>
+                        <field name="escort_driver_antigen_test_time"/>
+                        <field name="escort_driver_antigen_test_result"/>
+                        <field name="escort_driver_temperature"/>
+                    </group>
+
+                    <group col='4' string="登记员信息">
+                        <field name="registrar"/>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="wms_vehicle_view_list" model="ir.ui.view">
+        <field name="name">车辆出入记录</field>
+        <field name="model">wms.vehicle</field>
+        <field name="arch" type="xml">
+            <tree default_order='enter_exit_time desc'>
+                <field name="enter_exit_time" required="1"/>
+                <field name="carrier_plate_number" required="1"/>
+                <field name="carrier_name" required="1"/>
+                <field name="enter_exit_type" required="1"/>
+                <field name="carrier_plate_type" required="1"/>
+                <field name="carrier_driver_name" required="1"/>
+                <field name="carrier_driver_idcard" required="1"/>
+                <field name="escort" required="1"/>
+                <field name="escort_idcard" required="1"/>
+                <field name="report_time" required="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="wms_vehicle_tree_view1" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="wms_vehicle_view_list"/>
+        <field name="act_window_id" ref="wms_vehicle_out_action"/>
+    </record>
+
+    <record id="wms_vehicle_form_view2" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wms_vehicle_view_form_simplified"/>
+        <field name="act_window_id" ref="wms_vehicle_out_action"/>
+    </record>
+
+
+</odoo>
