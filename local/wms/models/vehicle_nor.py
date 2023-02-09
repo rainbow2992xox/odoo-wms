@@ -94,10 +94,10 @@ class Vehicle(models.Model):
     def create_vehicle_out(self):
         for select_records in self:
             if select_records.vehicle_out_id == 0 and select_records.enter_exit_type == '0':
-
+                enter_exit_time = datetime.datetime.now() + datetime.timedelta(hours=8)
                 record = {
                     "carrier_plate_number": select_records.carrier_plate_number,
-                    "enter_exit_time": datetime.datetime.now(),
+                    "enter_exit_time": enter_exit_time,
                     "enter_exit_type": '1',
                     "carrier_name": select_records.carrier_name,
                     "visit_reason": select_records.visit_reason,
