@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='wms_address_action' model='ir.actions.act_window'>
+        <field name="name">Address</field>
+        <field name="res_model">wms.address</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="危险品库存" id="wms_base_menu"/>
+    <menuitem name="地址" id="wms_address_menu" parent="wms_base_menu" action="wms_address_action"/>
+
+
+    <record id="wms_address_view_tree" model="ir.ui.view">
+        <field name="name">wms.address.tree</field>
+        <field name="model">wms.address</field>
+        <field name="arch" type="xml">
+            <tree string="地点" >
+                <field name="address_detail"/>
+                <field name="contacts"/>
+                <field name="contacts_phone"/>
+                <field name="type"/>
+                <field name="is_active"/>
+                <field name="organization_id"/>
+            </tree>
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='wms_move_stock_action' model='ir.actions.act_window'>
+        <field name="name">移库表</field>
+        <field name="res_model">wms.move.stock</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
+    <menuitem name="移库表" id="wms_omove_stock_menu" parent="wms_base_menu" action="wms_move_stock_action"/>
+
+    <record id="wms_move_stock_view_tree" model="ir.ui.view">
+        <field name="name">wms.move.stock</field>
+        <field name="model">wms.move.stock</field>
+        <field name="arch" type="xml">
+            <tree string="移库表" default_order='create_date desc'>
+                <field name="transfer_time"></field>
+                <field name="warehouse_type"></field>
+                <field name="from_warehouse_code"></field>
+                <field name="from_warehouse_area_code"/>
+                <field name="from_location_code"/>
+
+                <field name="to_warehouse_code"></field>
+                <field name="to_warehouse_area_code"/>
+                <field name="to_location_code"/>
+
+                <field name="merchandise_id"/>
+                <field name="batch_code"/>
+                <field name="amount"/>
+                <field name="in_stock_id"/>
+                <field name="out_stock_id"/>
+
+                <field name="from_amount"/>
+                <field name="to_amount"/>
+
+                <field name="report_time"/>
+            </tree>
+        </field>
+    </record>
+
+
+</odoo>

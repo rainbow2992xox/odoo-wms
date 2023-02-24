@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='wms_api_log_action' model='ir.actions.act_window'>
+        <field name="name">API调用日志</field>
+        <field name="res_model">wms.api.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
+    <menuitem name="API调用日志" id="wms_api_log_menu" parent="wms_base_menu" action="wms_api_log_action"/>
+
+    <record id="wms_api_log_view_tree" model="ir.ui.view">
+        <field name="name">wms.api.log.tree</field>
+        <field name="model">wms.api.log</field>
+        <field name="arch" type="xml">
+            <tree string="API调用日志" default_order='create_date desc' >
+                <field name="create_date" string="调用时间"></field>
+                <field name="api_address"/>
+                <field name="status"/>
+                <field name="body"/>
+                <field name="res"/>
+            </tree>
+        </field>
+    </record>
+
+
+</odoo>

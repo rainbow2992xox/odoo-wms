@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='wms_stock_action' model='ir.actions.act_window'>
+        <field name="name">库存表</field>
+        <field name="res_model">wms.stock</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
+    <menuitem name="库存表" id="wms_stock_menu" parent="wms_base_menu" action="wms_stock_action"/>
+
+    <record id="wms_stock_view_tree" model="ir.ui.view">
+        <field name="name">wms.stock</field>
+        <field name="model">wms.stock</field>
+        <field name="arch" type="xml">
+            <tree string="库存表" default_order='create_date desc'>
+                <field name="report_time"></field>
+                <field name="warehouse_code"></field>
+                <field name="warehouse_area_code"/>
+                <field name="location_code"/>
+                <field name="merchandise_id"/>
+                <field name="amount"/>
+            </tree>
+        </field>
+    </record>
+
+
+</odoo>
