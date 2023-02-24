@@ -95,7 +95,7 @@ class Merchandise(models.Model):
     # 定时任务调用时间
     report_time = fields.Datetime(string="上报时间")
 
-    # 导入数据后更新出入库、库存状态 T
+    # 导入数据后更新出入库、库存状态
 
     def upload_file(self):
         for r in self:
