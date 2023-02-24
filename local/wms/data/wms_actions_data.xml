@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="action_merchandise_upload_file" model="ir.actions.server">
+            <field name="name">上传化学品安全技术说明书</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_wms_merchandise"/>
+            <field name="binding_model_id" ref="model_wms_merchandise"/>
+            <field name="state">code</field>
+            <field name="code">records.upload_file()</field>
+        </record>
+    </data>
+</odoo>
+

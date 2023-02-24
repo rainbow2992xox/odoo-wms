@@ -15,6 +15,9 @@
         <field name="model">wms.out.stock</field>
         <field name="arch" type="xml">
             <tree string="出库表" default_order='create_date desc'>
+                <field name="report_time"/>
+                <field name="if_need_update"/>
+                <field name="abnormal_reason"/>
                 <field name="o_id"/>
                 <field name="vehicle_id"/>
                 <field name="carrier_plate_number"/>
@@ -23,12 +26,13 @@
                 <field name="warehouse_code"></field>
                 <field name="warehouse_area_code"/>
                 <field name="location_code"/>
+
+                <field name="merchandise_code"/>
                 <field name="merchandise_id"/>
                 <field name="batch_code"/>
                 <field name="amount"/>
                 <field name="consignee_name"/>
                 <field name="consignee_address"/>
-                <field name="report_time"/>
             </tree>
         </field>
     </record>

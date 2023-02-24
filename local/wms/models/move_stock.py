@@ -19,6 +19,7 @@ class MoveStock(models.Model):
     from_amount = fields.Integer(string="移出货位结存")
     to_amount = fields.Integer(string="移入货位结存")
 
+    merchandise_code = fields.Char(string="商品编码", required=True)
     merchandise_id = fields.Integer(string="货品ID")
     batch_code = fields.Char(string="生产批次号")
     amount = fields.Integer(string="数量")

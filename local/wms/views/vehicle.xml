@@ -58,27 +58,17 @@
                         <field name="carrier_name"/>
                     </group>
                     <group col='2' string="驾驶员信息">
-                        <field name="carrier_driver_name"/>
+                        <field name="carrier_driver_id"/>
                         <field name="carrier_driver_idcard"/>
                         <field name="carrier_driver_phone"/>
                         <field name="carrier_driver_certificate"/>
-                        <field name="carrier_driver_nuclear_acid_time"/>
-                        <field name="carrier_driver_nuclear_acid_result"/>
-                        <field name="carrier_driver_antigen_test_time"/>
-                        <field name="carrier_driver_antigen_test_result"/>
-                        <field name="carrier_driver_temperature"/>
                     </group>
 
                     <group col='2' string="押运员信息">
-                        <field name="escort"/>
+                        <field name="escort_driver_id"/>
                         <field name="escort_idcard"/>
                         <field name="escort_phone"/>
                         <field name="escort_driver_certificate"/>
-                        <field name="escort_driver_nuclear_acid_time"/>
-                        <field name="escort_driver_nuclear_acid_result"/>
-                        <field name="escort_driver_antigen_test_time"/>
-                        <field name="escort_driver_antigen_test_result"/>
-                        <field name="escort_driver_temperature"/>
                     </group>
 
                     <group col='4' string="登记员信息">
@@ -116,27 +106,17 @@
                         <field name="carrier_name" required="1"/>
                     </group>
                     <group col='4' string="驾驶员信息">
-                        <field name="carrier_driver_name"/>
+                        <field name="carrier_driver_id"/>
                         <field name="carrier_driver_idcard"/>
                         <field name="carrier_driver_phone"/>
                         <field name="carrier_driver_certificate"/>
-                        <field name="carrier_driver_nuclear_acid_time"/>
-                        <field name="carrier_driver_nuclear_acid_result"/>
-                        <field name="carrier_driver_antigen_test_time"/>
-                        <field name="carrier_driver_antigen_test_result"/>
-                        <field name="carrier_driver_temperature"/>
                     </group>
 
                     <group col='4' string="押运员信息">
-                        <field name="escort"/>
+                        <field name="escort_driver_id"/>
                         <field name="escort_idcard"/>
                         <field name="escort_phone"/>
                         <field name="escort_driver_certificate"/>
-                        <field name="escort_driver_nuclear_acid_time"/>
-                        <field name="escort_driver_nuclear_acid_result"/>
-                        <field name="escort_driver_antigen_test_time"/>
-                        <field name="escort_driver_antigen_test_result"/>
-                        <field name="escort_driver_temperature"/>
                     </group>
 
                     <group col='4' string="登记员信息">

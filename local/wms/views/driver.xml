@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='wms_driver_action' model='ir.actions.act_window'>
+        <field name="name">司机表</field>
+        <field name="res_model">wms.driver</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
+    <menuitem name="司机表" id="wms_driver_menu" parent="wms_base_menu" action="wms_driver_action"/>
+
+    <record id="wms_driver_view_tree" model="ir.ui.view">
+        <field name="name">wms.driver</field>
+        <field name="model">wms.driver</field>
+        <field name="arch" type="xml">
+            <tree string="司机表" default_order='create_date desc'>
+                <field name="name"></field>
+                <field name="idcard"/>
+                <field name="driver_certificate"></field>
+                <field name="phone"/>
+            </tree>
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,4 +1,6 @@
-from odoo import models, fields
+from odoo import models, fields, api
+import os
+
 
 class Merchandise(models.Model):
     _name = "wms.merchandise"
@@ -8,10 +10,10 @@ class Merchandise(models.Model):
     merchandise_name = fields.Char(string="货品名称", size=128, required=True)
     owner_id = fields.Char(string="货主ID", size=128, required=True)
     owner_name = fields.Char(string="货主名称", size=128, required=True)
-    warehouse_type = fields.Integer(string="货品存储空间类型",required=True , help="0:储罐，1：仓库")
+    warehouse_type = fields.Integer(string="货品存储空间类型", required=True, help="0:储罐，1：仓库")
     # 单选
     is_mixture = fields.Integer(string="是否为混合物", required=True, help="0:否，1：是")
-    chemical_serial = fields.Integer(string="2828目录序号", required=True)
+    chemical_serial = fields.Integer(string="2828目录序号")
 
     chemical_name = fields.Char(string="危险化学品名", size=128, required=True)
     # 多选 代号英文逗号隔开
@@ -24,6 +26,7 @@ class Merchandise(models.Model):
 
     un_code = fields.Char(string="联合国编号（UN号）", size=32, required=True)
     cas_code = fields.Char(string="CAS号", size=32)
+    cas_index = fields.Char(string="CAS索引号", size=32)
 
     # 多选 代号英文逗号隔开
     risk_ghs_item_category = fields.Char(string="危险性类别 （GHS）", size=128, required=True,
@@ -61,27 +64,53 @@ class Merchandise(models.Model):
     # 单选
     regulatory = fields.Integer(string="重点监管危险化学品特性", required=True, help="0:否，1：是")
     # 多选
-    prohibited = fields.Integer(string="上海禁限控化学品特性", required=True, help="1-全市禁止2-化工区禁止3-中心城限制和控制4-不限控")
+    prohibited = fields.Integer(string="上海禁限控化学品特性", required=True,
+                                help="1-全市禁止2-化工区禁止3-中心城限制和控制4-不限控")
     # 单选
     easy_made_drug = fields.Integer(string="公安易制毒特性", required=True, help="0:否，1：是")
     # 单选
     easy_to_explode = fields.Integer(string="公安易制爆特性", required=True, help="0:否，1：是")
     critical_quantity = fields.Float(string="重大危险源申报临界值", digits=(10, 2), required=True, help="单位吨")
     # 多选
-    fire_fighting_measures = fields.Char(string="适用消防措施", size=32, required=True, help="1干粉；2黄沙；3水；4大量流水；5泡沫；6二氧化碳；7其它")
+    fire_fighting_measures = fields.Char(string="适用消防措施", size=32, required=True,
+                                         help="1干粉；2黄沙；3水；4大量流水；5泡沫；6二氧化碳；7其它")
     mixed_taboo = fields.Char(string="混放禁忌", size=128, help="危险化学品名/联合国编号（UN号）/CAS号")
 
     # 计算字段页面上传文件调用JAVA上传文件接口保存KEY字段 TODO url是否需要保存？
-    chemical_identification_report = fields.Char(string="上传《化学品安全技术说明书》", size=256, required=True, help="上传市局系统后获得的路径")
+    chemical_identification_report = fields.Char(string="上传《化学品安全技术说明书》", size=256, required=True,
+                                                 help="上传市局系统后获得的路径")
     # 计算字段页面上传文件调用JAVA上传文件接口保存KEY字段 TODO url是否需要保存？
-    chemical_classification_report = fields.Char(string="上传《化学品危险性分类报告》", size=256, required=True, help="上传市局系统后获得的路径")
+    chemical_classification_report = fields.Char(string="上传《化学品危险性分类报告》", size=256, required=True,
+                                                 help="上传市局系统后获得的路径")
 
     density = fields.Float(string="密度值", digits=(10, 2), help="密度值（保留2位小数）")
-    density_unit = fields.Char(string="密度单位", size=32, help="气体：千克/立方米，克/立方米，毫克/立方米液体：千克/升，克/升，毫克/升")
+    density_unit = fields.Char(string="密度单位", size=32,
+                               help="气体：千克/立方米，克/立方米，毫克/立方米液体：千克/升，克/升，毫克/升")
     concentration = fields.Float(string="浓度", digits=(10, 2), required=True, help="百分比，保留2位小数")
     unit_count = fields.Integer(string="规格数量", required=True, help="规格数量")
-    unit = fields.Char(string="规格计量单位", size=32, required=True, help="质量：毫克，克，千克，吨体积：微升，毫升，升，立方米")
+    unit = fields.Char(string="规格计量单位", size=32, required=True,
+                       help="质量：毫克，克，千克，吨体积：微升，毫升，升，立方米")
     specification = fields.Char(string="规格包装单位名称", size=32, required=True, help="包装单位（桶／箱／罐／瓶／包）")
 
     # 定时任务调用时间
     report_time = fields.Datetime(string="上报时间")
+
+    # 导入数据后更新出入库、库存状态 T
+
+    def upload_file(self):
+        for r in self:
+            filepath = os.path.join('/home/reagent/opt/sdspdf', r['cas_index'] + '.pdf')
+            move_post_body = {
+                "type": "filesync",
+                "filepath": filepath,
+            }
+
+            res = self.env["wms.api.log"]._post(move_post_body)
+            r.chemical_identification_report = res['module']['key']
+
+            if r.chemical_serial <= 2827 or r.chemical_serial >= 1:
+                pass
+            else:
+                r.chemical_classification_report = res['module']['key']
+
+            print(res)

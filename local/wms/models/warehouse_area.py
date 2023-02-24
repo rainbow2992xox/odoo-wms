@@ -7,7 +7,7 @@ class WarehouseArea(models.Model):
 
     warehouse_code = fields.Char(string="仓库号/罐组号", size=32, required=True)
     warehouse_area_code = fields.Char(string="仓间号/储罐号", size=32, required=True)
-    location_code_list = fields.Char(string="仓位号", size=2048, help="仓间下所有仓位号列表")
+    location_code_list = fields.Text(string="仓位号", help="仓间下所有仓位号列表")
     # 单选  TODO 同步数据或者接口上报时需二次处理
     fire_risk = fields.Char(string="仓库火灾危险性 类别", size=32,
                             help="甲、甲1、甲2、甲3、甲4、甲5、甲6、乙、乙1、乙2、乙3、乙4、乙5、乙6、丙、丙1、丙2、丁、丁1、丁2、丁3、丁4、丁5、丁6、戊、戊1、戊2、戊3、戊4、戊5、戊6")
@@ -23,5 +23,6 @@ class WarehouseArea(models.Model):
 
     risk_item_category = fields.Char(string="危险货物类别", size=128)
 
-
+    # 定时任务调用时间
+    report_time = fields.Datetime(string="上报时间")
 

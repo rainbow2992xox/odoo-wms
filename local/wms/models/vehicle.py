@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 import requests
 import pytz
 
+
 class Vehicle(models.Model):
     _name = "wms.vehicle"
 
@@ -19,21 +20,38 @@ class Vehicle(models.Model):
 
     carrier_name = fields.Char(string="承运企业名称", required=True, size=32)
 
+    carrier_driver_id = fields.Many2one("wms.driver", "驾驶员")
+
+    # carrier_driver_name = fields.Char(string="驾驶员姓名", related="carrier_driver_id.name")
+    # carrier_driver_idcard = fields.Char(string="驾驶员身份证号", related="carrier_driver_id.idcard")
+    #
+    # carrier_driver_phone = fields.Char(string="驾驶员联系电话", related="carrier_driver_id.phone")
+    # carrier_driver_certificate = fields.Char(string="驾驶员从业资格证", related="carrier_driver_id.driver_certificate")
+
     carrier_driver_name = fields.Char(string="驾驶员姓名", size=32, required=True)
     carrier_driver_idcard = fields.Char(string="驾驶员身份证号", size=32, required=True)
-
     carrier_driver_phone = fields.Char(string="驾驶员联系电话", size=32, required=True)
     carrier_driver_certificate = fields.Char(string="驾驶员从业资格证", size=32, required=True)
+
     carrier_driver_nuclear_acid_time = fields.Date(string="驾驶员核酸检测时间")
     carrier_driver_nuclear_acid_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='驾驶员核酸检测结果')
     carrier_driver_antigen_test_time = fields.Date(string="驾驶员抗原检测时间")
     carrier_driver_antigen_test_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='驾驶员抗原检测结果')
     carrier_driver_temperature = fields.Integer(string="驾驶员体温℃", size=32)
 
+    escort_driver_id = fields.Many2one("wms.driver", "押运员")
+
+    # escort = fields.Char(string="押运员姓名", related="escort_driver_id.name")
+    # escort_idcard = fields.Char(string="押运员身份证号", related="escort_driver_id.idcard")
+    # escort_phone = fields.Char(string="押运员联系电话", related="escort_driver_id.phone")
+    # escort_driver_certificate = fields.Char(string="押运员从业资格证", related="escort_driver_id.driver_certificate" )
+
     escort = fields.Char(string="押运员姓名", size=32, required=True)
     escort_idcard = fields.Char(string="押运员身份证号", size=32, required=True)
     escort_phone = fields.Char(string="押运员联系电话", size=32, required=True)
     escort_driver_certificate = fields.Char(string="押运员从业资格证", size=32, required=True)
+
+
     escort_driver_nuclear_acid_time = fields.Date(string="押运员核酸检测时间")
     escort_driver_nuclear_acid_result = fields.Selection([('0', '阴性'), ('1', '阳性')], string='押运员核酸检测结果')
     escort_driver_antigen_test_time = fields.Date(string="押运员抗原检测时间")
@@ -96,21 +114,21 @@ class Vehicle(models.Model):
         if Errors:
             raise models.ValidationError('\n'.join(Errors))
 
-
-
     def open_vehicle_copy_view(self):
         for select_records in self:
             record = {
                 "default_carrier_plate_number": select_records.carrier_plate_number,
-                #datetime.datetime.now() UTC time
+                # datetime.datetime.now() UTC time
                 "default_enter_exit_time": datetime.datetime.now() + datetime.timedelta(hours=8),
                 "default_enter_exit_type": '0',
+                "default_carrier_driver_id": select_records.carrier_driver_id.id,
                 "default_carrier_name": select_records.carrier_name,
                 "default_carrier_plate_type": select_records.carrier_plate_type,
                 "default_carrier_driver_name": select_records.carrier_driver_name,
                 "default_carrier_driver_idcard": select_records.carrier_driver_idcard,
                 "default_carrier_driver_phone": select_records.carrier_driver_phone,
                 "default_carrier_driver_certificate": select_records.carrier_driver_certificate,
+                "default_escort_driver_id":select_records.escort_driver_id.id,
                 "default_escort": select_records.escort,
                 "default_escort_idcard": select_records.escort_idcard,
                 "default_escort_phone": select_records.escort_phone,
@@ -169,32 +187,24 @@ class Vehicle(models.Model):
                     "enter_exit_type": '1',
                     "carrier_name": select_records.carrier_name,
                     "carrier_plate_type": select_records.carrier_plate_type,
+
+                    "carrier_driver_id": select_records.carrier_driver_id.id,
                     "carrier_driver_name": select_records.carrier_driver_name,
                     "carrier_driver_idcard": select_records.carrier_driver_idcard,
                     "carrier_driver_phone": select_records.carrier_driver_phone,
                     "carrier_driver_certificate": select_records.carrier_driver_certificate,
-                    "carrier_driver_nuclear_acid_time": select_records.carrier_driver_nuclear_acid_time,
-                    "carrier_driver_nuclear_acid_result": select_records.carrier_driver_nuclear_acid_result,
 
-                    "carrier_driver_antigen_test_time": select_records.carrier_driver_antigen_test_time,
-                    "carrier_driver_antigen_test_result": select_records.carrier_driver_antigen_test_result,
-                    "carrier_driver_temperature": select_records.carrier_driver_temperature,
 
+                    "escort_driver_id": select_records.escort_driver_id.id,
                     "escort": select_records.escort,
                     "escort_idcard": select_records.escort_idcard,
                     "escort_phone": select_records.escort_phone,
-
                     "escort_driver_certificate": select_records.escort_driver_certificate,
-                    "escort_driver_nuclear_acid_time": select_records.escort_driver_nuclear_acid_time,
-                    "escort_driver_nuclear_acid_result": select_records.escort_driver_nuclear_acid_result,
 
-                    "escort_driver_antigen_test_time": select_records.escort_driver_antigen_test_time,
-                    "escort_driver_antigen_test_result": select_records.escort_driver_antigen_test_result,
-                    "escort_driver_temperature": select_records.escort_driver_temperature,
 
                     "registrar": select_records.registrar,
 
-                    "way_bill_code":select_records.way_bill_code,
+                    "way_bill_code": select_records.way_bill_code,
 
                     "in_stock_id": select_records.in_stock_id,
                     "out_stock_id": select_records.out_stock_id,

@@ -11,6 +11,7 @@ import os
 import time
 import pytz
 
+
 class ApiLog(models.Model):
     _name = 'wms.api.log'
     api_address = fields.Char('API地址')
@@ -24,7 +25,7 @@ class ApiLog(models.Model):
     @api.model
     def create(self, vals):
         vals['call_time'] = datetime.datetime.now() + datetime.timedelta(hours=8)
-        res = super(ApiLog,self).create(vals)
+        res = super(ApiLog, self).create(vals)
         return res
 
     _sql = {
@@ -95,6 +96,7 @@ class ApiLog(models.Model):
             "仓库号": "warehouseCode",
             "仓间号": "warehouseAreaCode",
             "仓位号": "locationCode",
+            "商品编码": "merchandiseCode",
             "货品ID": "merchandiseId",
             "数量": "amount"
         },
@@ -104,6 +106,7 @@ class ApiLog(models.Model):
             "入库仓库号": "warehouseCode",
             "入库仓间号": "warehouseAreaCode",
             "入库仓位号": "locationCode",
+            "商品编码": "merchandiseCode",
             "货品ID": "merchandiseId",
             "生产批次号": "batchCode",
             "数量": "amount",
@@ -115,6 +118,7 @@ class ApiLog(models.Model):
             "出库仓库号": "warehouseCode",
             "出库仓间号": "warehouseAreaCode",
             "出库仓位号": "locationCode",
+            "商品编码": "merchandiseCode",
             "货品ID": "merchandiseId",
             "生产批次号": "batchCode",
             "收货方地址": "consigneeAddress",
@@ -131,6 +135,7 @@ class ApiLog(models.Model):
             "目标仓库号": "toWarehouseCode",
             "目标仓间号": "toWarehouseAreaCode",
             "目标仓位号": "toLocationCode",
+            "商品编码": "merchandiseCode",
             "货品ID": "merchandiseId",
             "生产批次号": "batchCode",
             "入库ID": "in_stock_id",
@@ -213,13 +218,13 @@ class ApiLog(models.Model):
         return new_list
 
     def _post(self, body):
-        res = requests.request("POST", "http://10.3.0.150:7673/java/sync", headers={"content-type": "application/json",
-                                                                                    "charset": "utf-8"},
-                               data=json.dumps(body))
-
-        # res = requests.request("POST", "http://10.3.0.150:7674/java/sync", headers={"content-type": "application/json",
+        # res = requests.request("POST", "http://10.3.0.150:7673/java/sync", headers={"content-type": "application/json",
         #                                                                             "charset": "utf-8"},
         #                        data=json.dumps(body))
+
+        res = requests.request("POST", "http://10.3.0.150:7674/java/sync", headers={"content-type": "application/json",
+                                                                                    "charset": "utf-8"},
+                               data=json.dumps(body))
 
         return res.json()
 
@@ -273,14 +278,15 @@ class ApiLog(models.Model):
                 if len(res) > 0:
                     transferData = self._trans_model_to_api_data(
                         self._trans_record_to_dict(move_stock_record,
-                                                   del_keys=['in_stock_id', 'out_stock_id', 'from_amount', 'to_amount',
+                                                   del_keys=['in_stock_id', 'merchandise_code', 'out_stock_id',
+                                                             'from_amount', 'to_amount',
                                                              'report_time']))
 
                     # 将datetime格式转时间戳,8x
                     transferData['transferTime'] = transferData['transferTime']
 
                     # JAVA time*1000
-                    transferData['transferTime'] = int(time.mktime(transferData['transferTime'].timetuple())*1000)
+                    transferData['transferTime'] = int(time.mktime(transferData['transferTime'].timetuple()) * 1000)
 
                     # 查询出仓库位状态
                     inventoryOutData = {
@@ -342,7 +348,8 @@ class ApiLog(models.Model):
                 # 匹配车辆出入记录，匹配到的数据调用JAVA接口
                 for in_stock_record in in_stock_list:
                     inboundData = self._trans_model_to_api_data(
-                        self._trans_record_to_dict(in_stock_record, del_keys=['o_id', 'vehicle_id', 'report_time']))
+                        self._trans_record_to_dict(in_stock_record,
+                                                   del_keys=['o_id', 'merchandise_code', 'vehicle_id', 'report_time']))
 
                     # 相同车牌最近的一次未绑定入库记录的出入记录
                     inbound_time = in_stock_record.inbound_time
@@ -354,26 +361,26 @@ class ApiLog(models.Model):
                         ["&",
                          ('carrier_plate_number', '=', in_stock_record.carrier_plate_number),
                          ('enter_exit_type', '=', "0"),
-                         ('enter_exit_time', '>', today ),
+                         ('enter_exit_time', '>', today),
                          ('enter_exit_time', '<', inbound_time)
                          ], limit=1, order="enter_exit_time DESC")
 
                     stock_res = self.env['wms.stock'].search([("merchandise_id", "=", in_stock_record.merchandise_id)])
-
 
                     if len(vehicle_res) > 0 and len(stock_res) > 0:
                         vehicle_data = self._trans_record_to_dict(vehicle_res[0],
                                                                   del_keys=['enter_exit_type', 'vehicle_out_id',
                                                                             'enter_exit_time', 'carrier_plate_number',
                                                                             'in_stock_id', 'out_stock_id',
-                                                                            'report_time', 'carrier_driver_phone',
+                                                                            'report_time', 'carrier_driver_id',
+                                                                            'carrier_driver_phone',
                                                                             'carrier_driver_certificate',
                                                                             'carrier_driver_nuclear_acid_time',
                                                                             'carrier_driver_nuclear_acid_result',
                                                                             'carrier_driver_antigen_test_time',
                                                                             'carrier_driver_antigen_test_result',
                                                                             'carrier_driver_temperature',
-                                                                            'escort_phone',
+                                                                            'escort_phone', 'escort_driver_id',
                                                                             'escort_driver_certificate',
                                                                             'escort_driver_nuclear_acid_time',
                                                                             'escort_driver_nuclear_acid_result',
@@ -394,8 +401,7 @@ class ApiLog(models.Model):
                         # 将datetime格式转时间戳
                         inboundData['inboundTime'] = inboundData['inboundTime']
                         # JAVA time*1000
-                        inboundData['inboundTime'] = int(time.mktime(inboundData['inboundTime'].timetuple())*1000)
-
+                        inboundData['inboundTime'] = int(time.mktime(inboundData['inboundTime'].timetuple()) * 1000)
 
                         inventoryData = self._trans_model_to_api_data(self._trans_record_to_dict(stock_res[0]))
 
@@ -407,7 +413,6 @@ class ApiLog(models.Model):
                             },
                             "router": "/report/inbound"
                         }
-
 
                         res = self._post(move_post_body)
 
@@ -421,7 +426,8 @@ class ApiLog(models.Model):
                         if res["success"]:
                             # 插入成功后更新入库表关联出入记录ID
                             in_stock_record.write(
-                                {"vehicle_id": vehicle_res[0].id, "report_time": datetime.datetime.now() + datetime.timedelta(hours=8)})
+                                {"vehicle_id": vehicle_res[0].id,
+                                 "report_time": datetime.datetime.now() + datetime.timedelta(hours=8)})
         elif key == "out_stock":
             cursor.execute(self._sql[key])
             result = cursor.fetchall()
@@ -445,12 +451,13 @@ class ApiLog(models.Model):
                 # 匹配车辆出入记录，匹配到的数据调用JAVA接口
                 for out_stock_record in out_stock_list:
                     outboundData = self._trans_model_to_api_data(
-                        self._trans_record_to_dict(out_stock_record, del_keys=['o_id', 'vehicle_id', 'report_time']))
+                        self._trans_record_to_dict(out_stock_record,
+                                                   del_keys=['o_id', 'merchandise_code', 'vehicle_id', 'report_time']))
 
                     # 相同车牌最近的一次未绑定入库记录的出入记录
                     outbound_time = out_stock_record.outbound_time
-                    tomorrow = datetime.datetime(outbound_time.year, outbound_time.month, outbound_time.day + 1, 0, 0,
-                                                 0)
+                    tomorrow = datetime.datetime(outbound_time.year, outbound_time.month, outbound_time.day + 1, 23, 59,
+                                                 59)
 
                     # Odoo数据库存的是格林威治，查询时需要-8小时时差
                     # 出库查询出的记录,车辆出去时间大于出库时间升序第一条。
@@ -458,8 +465,8 @@ class ApiLog(models.Model):
                         ["&",
                          ('carrier_plate_number', '=', out_stock_record.carrier_plate_number),
                          ('enter_exit_type', '=', "1"),
-                         ('enter_exit_time', '<', tomorrow ),
-                         ('enter_exit_time', '>', outbound_time )
+                         ('enter_exit_time', '<', tomorrow),
+                         ('enter_exit_time', '>', outbound_time)
                          ], limit=1, order="enter_exit_time")
 
                     stock_res = self.env['wms.stock'].search([("merchandise_id", "=", out_stock_record.merchandise_id)])
@@ -469,14 +476,15 @@ class ApiLog(models.Model):
                                                                   del_keys=['enter_exit_type', 'vehicle_out_id',
                                                                             'enter_exit_time', 'carrier_plate_number',
                                                                             'in_stock_id', 'out_stock_id',
-                                                                            'report_time', 'carrier_driver_phone',
+                                                                            'report_time', 'carrier_driver_id',
+                                                                            'carrier_driver_phone',
                                                                             'carrier_driver_certificate',
                                                                             'carrier_driver_nuclear_acid_time',
                                                                             'carrier_driver_nuclear_acid_result',
                                                                             'carrier_driver_antigen_test_time',
                                                                             'carrier_driver_antigen_test_result',
                                                                             'carrier_driver_temperature',
-                                                                            'escort_phone',
+                                                                            'escort_phone', 'escort_driver_id',
                                                                             'escort_driver_certificate',
                                                                             'escort_driver_nuclear_acid_time',
                                                                             'escort_driver_nuclear_acid_result',
@@ -485,9 +493,6 @@ class ApiLog(models.Model):
                                                                             'escort_driver_temperature',
                                                                             'registrar'
                                                                             ])
-
-
-
 
                         # 出入库承运车辆性质和车辆出入记录定义不同
                         vehicle_data['carrierPlateType'] = '3'
@@ -502,7 +507,7 @@ class ApiLog(models.Model):
 
                         # 将datetime格式转时间戳
                         outboundData['outboundTime'] = outboundData['outboundTime']
-                        outboundData['outboundTime'] = int(time.mktime(outboundData['outboundTime'].timetuple())*1000)
+                        outboundData['outboundTime'] = int(time.mktime(outboundData['outboundTime'].timetuple()) * 1000)
 
                         inventoryData = self._trans_model_to_api_data(self._trans_record_to_dict(stock_res[0]))
                         move_post_body = {
@@ -526,7 +531,8 @@ class ApiLog(models.Model):
                         if res["success"]:
                             # 插入成功后更新出库表关联出入记录ID和上报时间
                             out_stock_record.write(
-                                {"vehicle_id": vehicle_res[0].id, "report_time": datetime.datetime.now() + datetime.timedelta(hours=8)})
+                                {"vehicle_id": vehicle_res[0].id,
+                                 "report_time": datetime.datetime.now() + datetime.timedelta(hours=8)})
         elif key == "stock":
             cursor.execute(self._sql[key])
             result = cursor.fetchall()
@@ -540,8 +546,9 @@ class ApiLog(models.Model):
                     if len(res) > 0:
                         record = self._trans_api_to_model_data(item)
                         record["report_time"] = datetime.datetime.now() + datetime.timedelta(hours=8)
-                        self.env['wms.stock'].create(self._trans_api_to_model_data(item))
-                        body_list.append(item)
+                        s = self.env['wms.stock'].create(self._trans_api_to_model_data(item))
+                        del item["merchandiseCode"]
+                        body_list.append(self._trans_model_to_api_data(item))
 
                 move_post_body = {
                     "type": "fullsync",
@@ -556,19 +563,33 @@ class ApiLog(models.Model):
                              "res": res
                              })
         elif key == "warehouse_area":
-            df = pd.read_excel("/opt/odoo-wms/local/wms/data/warehouse_area.xlsx")
-            # df = pd.read_excel("/home/rainbow/Documents/odoo-wms/local/wms/data/warehouse_area.xlsx")
-            new_cols = []
-            map_dict = self._map[key]
-            for k in df.columns:
-                if k in map_dict:
-                    new_cols.append(map_dict[k])
-                else:
-                    new_cols.append(k)
-            df.columns = new_cols
-            df = df.fillna('')
+            # df = pd.read_excel("/opt/odoo-wms/local/wms/data/warehouse_area.xlsx")
+            # # df = pd.read_excel("/home/rainbow/Documents/odoo-wms/local/wms/data/warehouse_area.xlsx")
+            # new_cols = []
+            # map_dict = self._map[key]
+            # for k in df.columns:
+            #     if k in map_dict:
+            #         new_cols.append(map_dict[k])
+            #     else:
+            #         new_cols.append(k)
+            # df.columns = new_cols
+            # df = df.fillna('')
+            #
+            # warehouse_area_list = df.to_dict(orient='records')
 
-            warehouse_area_list = df.to_dict(orient='records')
+            # self.env['wms.warehouse.area'].search([]).unlink()
+            # for item in warehouse_area_list:
+            #     self.env['wms.warehouse.area'].create(self._trans_api_to_model_data(item))
+
+            warehouse_area_list = []
+
+            warehouse_areas = self.env['wms.warehouse.area'].search_read([])
+            for w in warehouse_areas:
+                for k in ['id', 'report_time', '__last_update', 'display_name', 'create_uid',
+                          'create_date', 'write_uid',
+                          'write_date']:
+                    del w[k]
+                warehouse_area_list.append(self._trans_model_to_api_data(w))
 
             move_post_body = {
                 "type": "fullsync",
@@ -576,38 +597,63 @@ class ApiLog(models.Model):
                 "router": "/sync/data/warehouseSync"
             }
 
-            self.env['wms.warehouse.area'].search([]).unlink()
-            for item in warehouse_area_list:
-                self.env['wms.warehouse.area'].create(self._trans_api_to_model_data(item))
-
             res = self._post(move_post_body)
+            if res["success"]:
+                warehouse_areas = self.env['wms.warehouse.area'].search([])
+                warehouse_areas.write({"report_time":datetime.datetime.now() + datetime.timedelta(hours=8)})
+
             logs.append({"api_address": move_post_body["router"],
                          "status": '0' if res["success"] else '1',
                          "body": move_post_body,
                          "res": res
                          })
+
         elif key == "merchandise":
-            df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", dtype={"危险货物类别": str})
-            # df = pd.read_excel("/home/rainbow/Documents/odoo-wms/local/wms/data/merchandise_file.xlsx",
-            #                    dtype={"危险货物类别": str})
-            new_cols = []
-            del_cols = []
-            map_dict = self._map[key]
-            for k in df.columns:
-                if k in map_dict:
-                    new_cols.append(map_dict[k])
-                else:
-                    new_cols.append(k)
-                    del_cols.append(k)
-            df.columns = new_cols
-            df.drop(del_cols, axis=1, inplace=True)
-            df = df.fillna('')
 
-            merchandise_dict_list = df.to_dict(orient='records')
+            # df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", dtype={"危险货物类别": str})
+            #
+            # new_cols = []
+            # del_cols = []
+            # map_dict = self._map[key]
+            # for k in df.columns:
+            #     if k in map_dict:
+            #         new_cols.append(map_dict[k])
+            #     else:
+            #         new_cols.append(k)
+            #         del_cols.append(k)
+            # df.columns = new_cols
+            # df.drop(del_cols, axis=1, inplace=True)
+            # df = df.fillna('')
+            #
+            # merchandise_dict_list = df.to_dict(orient='records')
+            #
+            # self.env['wms.merchandise'].search([]).unlink()
+            # for item in merchandise_dict_list:
+            #     self.env['wms.merchandise'].create(self._trans_api_to_model_data(item))
 
-            self.env['wms.merchandise'].search([]).unlink()
-            for item in merchandise_dict_list:
-                self.env['wms.merchandise'].create(self._trans_api_to_model_data(item))
+            # for item in merchandise_dict_list:
+            #     move_post_body = {
+            #         "type": "incresync",
+            #         "data": item,
+            #         "router": "/sync/data/merchandiseAdd"
+            #     }
+            #     res = self._post(move_post_body)
+            #     print(res)
+            #     logs.append({"api_address": move_post_body["router"],
+            #                  "status": '0' if res["success"] else '1',
+            #                  "body": "",
+            #                  "res": res
+            #                  })
+
+            merchandise_dict_list = []
+
+            merchandises = self.env['wms.merchandise'].search_read([])
+            for m in merchandises:
+                for k in ['id', 'report_time', '__last_update', 'cas_index', 'display_name', 'create_uid',
+                          'create_date', 'write_uid',
+                          'write_date']:
+                    del m[k]
+                merchandise_dict_list.append(self._trans_model_to_api_data(m))
 
             move_post_body = {
                 "type": "fullsync",
@@ -621,6 +667,7 @@ class ApiLog(models.Model):
                          "body": "",
                          "res": res
                          })
+
         elif key == "merchandise_files":
             df = pd.read_excel("/opt/odoo-wms/local/wms/data/merchandise_file.xlsx", dtype={"危险货物类别": str})
             code_list = list(set(df['CAS索引号']))
@@ -650,6 +697,7 @@ class ApiLog(models.Model):
                                                                                                          'out_stock_id',
                                                                                                          'vehicle_out_id',
                                                                                                          'report_time',
+                                                                                                         'carrier_driver_id',
                                                                                                          'carrier_driver_phone',
                                                                                                          'carrier_driver_certificate',
                                                                                                          'carrier_driver_nuclear_acid_time',
@@ -657,6 +705,7 @@ class ApiLog(models.Model):
                                                                                                          'carrier_driver_antigen_test_time',
                                                                                                          'carrier_driver_antigen_test_result',
                                                                                                          'carrier_driver_temperature',
+                                                                                                         'escort_driver_id',
                                                                                                          'escort_phone',
                                                                                                          'escort_driver_certificate',
                                                                                                          'escort_driver_nuclear_acid_time',
@@ -668,7 +717,7 @@ class ApiLog(models.Model):
                                                                                                          'way_bill_code'
                                                                                                          ]))
                 # JAVA time*1000
-                vehicleData['enterExitTime'] = int(time.mktime(vehicleData['enterExitTime'].timetuple())*1000)
+                vehicleData['enterExitTime'] = int(time.mktime(vehicleData['enterExitTime'].timetuple()) * 1000)
                 move_post_body = {
                     "type": "incresync",
                     "data": vehicleData,
@@ -688,7 +737,40 @@ class ApiLog(models.Model):
         elif key == "clean":
             res = self.env["wms.api.log"].search([])
             for i in res:
-                i.write({"call_time":i["create_date"]+datetime.timedelta(hours=8)})
+                i.write({"call_time": i["create_date"] + datetime.timedelta(hours=8)})
+        elif key == "driver":
+            # 只能运行一次生成司机表然后修改模型字段
+            drivers = self.env['wms.driver'].search([])
+            drivers.unlink()
+            vehicles = self.env['wms.vehicle'].search([])
+            d_dict = {}
+            for v in vehicles:
+                if v.carrier_driver_idcard:
+                    d_dict[v.carrier_driver_idcard] = {
+                        "name": v.carrier_driver_name,
+                        "idcard": v.carrier_driver_idcard,
+                        "phone": v.carrier_driver_phone,
+                        "driver_certificate": v.carrier_driver_certificate,
+                    }
+                if v.escort_idcard:
+                    d_dict[v.escort_idcard] = {
+                        "name": v.escort,
+                        "idcard": v.escort_idcard,
+                        "phone": v.escort_phone,
+                        "driver_certificate": v.escort_driver_certificate,
+                    }
+            for k in d_dict:
+                drivers.create(d_dict[k])
+
+            for v in vehicles:
+                carrier_driver = self.env['wms.driver'].search([("idcard", "=", v.carrier_driver_idcard)])
+                escort_driver = self.env['wms.driver'].search([("idcard", "=", v.escort_idcard)])
+                v.write({"carrier_driver_id": carrier_driver.id, "escort_driver_id": escort_driver.id})
+
+            print(d_dict)
+        elif key == "warehouse_area":
+            pass
+
         # 插入日志
         for log in logs:
             record = self.env['wms.api.log'].create(log)

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='wms_merchandise_action' model='ir.actions.act_window'>
+        <field name="name">货品表</field>
+        <field name="res_model">wms.merchandise</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
+    <menuitem name="货品表" id="wms_merchandise_menu" parent="wms_base_menu" action="wms_merchandise_action"/>
+
+    <record id="wms_merchandise_view_tree" model="ir.ui.view">
+        <field name="name">wms.merchandise</field>
+        <field name="model">wms.merchandise</field>
+        <field name="arch" type="xml">
+            <tree string="货品表" default_order='create_date desc'>
+                <field name="merchandise_id"/>
+                <field name="merchandise_name"/>
+                <field name="owner_id"/>
+                <field name="owner_name"/>
+                <field name="warehouse_type"/>
+                <field name="is_mixture"/>
+                <field name="chemical_serial"/>
+                <field name="chemical_name"/>
+                <field name="mix_chemicle_name"/>
+                <field name="physical_state"/>
+                <field name="other_attribute"/>
+                <field name="un_code"/>
+                <field name="cas_code"/>
+                <field name="risk_ghs_item_category"/>
+                <field name="risk_item_category"/>
+                <field name="fire_risk"/>
+                <field name="organic"/>
+                <field name="deleterious"/>
+                <field name="acid_base"/>
+                <field name="monitored"/>
+                <field name="special_controlled"/>
+                <field name="regulatory"/>
+                <field name="prohibited"/>
+                <field name="easy_made_drug"/>
+                <field name="easy_to_explode"/>
+                <field name="critical_quantity"/>
+                <field name="fire_fighting_measures"/>
+                <field name="mixed_taboo"/>
+                <field name="chemical_identification_report"/>
+                <field name="chemical_classification_report"/>
+                <field name="density"/>
+                <field name="density_unit"/>
+                <field name="concentration"/>
+                <field name="unit_count"/>
+                <field name="unit"/>
+                <field name="specification"/>
+                <field name="report_time"/>
+
+            </tree>
+        </field>
+    </record>
+
+
+
+</odoo>

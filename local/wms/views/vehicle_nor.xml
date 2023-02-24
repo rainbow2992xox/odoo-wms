@@ -63,11 +63,6 @@
                                 <field name="name" />
                                 <field name="phone" />
                                 <field name="idcard" />
-                                <field name="nuclear_acid_time" />
-                                <field name="nuclear_acid_result" />
-                                <field name="antigen_test_time" />
-                                <field name="antigen_test_result" />
-                                <field name="temperature" />
                             </tree>
                         </field>
                     </group>
@@ -108,11 +103,6 @@
                                 <field name="name" />
                                 <field name="phone" />
                                 <field name="idcard" />
-                                <field name="nuclear_acid_time" />
-                                <field name="nuclear_acid_result" />
-                                <field name="antigen_test_time" />
-                                <field name="antigen_test_result" />
-                                <field name="temperature" />
                             </tree>
                         </field>
                     </group>

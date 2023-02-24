@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='wms_stock_action' model='ir.actions.act_window'>
+        <field name="name">仓储空间表</field>
+        <field name="res_model">wms.warehouse.area</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="危险品出入库动态管理系统" id="wms_base_menu"/>
+    <menuitem name="仓储空间表" id="wms_warehouse_area_menu" parent="wms_base_menu" action="wms_stock_action"/>
+
+    <record id="wms_warehouse_area_view_tree" model="ir.ui.view">
+        <field name="name">wms.warehouse.area</field>
+        <field name="model">wms.warehouse.area</field>
+        <field name="arch" type="xml">
+            <tree string="仓储空间表" default_order='create_date desc'>
+                <field name="warehouse_code"></field>
+                <field name="warehouse_area_code"/>
+                <field name="location_code_list"></field>
+                <field name="fire_risk"></field>
+                <field name="acreage"/>
+                <field name="max_volume"/>
+                <field name="fire_fighting_measures"/>
+                <field name="risk_ghs_category"/>
+                <field name="risk_item_category"/>
+                <field name="report_time"/>
+            </tree>
+        </field>
+    </record>
+
+
+</odoo>

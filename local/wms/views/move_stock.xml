@@ -25,6 +25,7 @@
                 <field name="to_warehouse_area_code"/>
                 <field name="to_location_code"/>
 
+                <field name="merchandise_code"/>
                 <field name="merchandise_id"/>
                 <field name="batch_code"/>
                 <field name="amount"/>
